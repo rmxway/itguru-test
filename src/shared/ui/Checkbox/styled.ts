@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Wrapper = styled.label`
 	display: flex;
@@ -27,7 +27,7 @@ export const CheckboxBox = styled.div<{ $checked: boolean }>`
 	width: 24px;
 	height: 24px;
 	flex-shrink: 0;
-	border: 1px solid ${({ theme }) => theme.colors.border};
+	border: 2px solid ${({ theme }) => theme.colors.border};
 	border-radius: 4px;
 	background-color: ${({ theme }) => theme.colors.white};
 	transition:
@@ -36,16 +36,18 @@ export const CheckboxBox = styled.div<{ $checked: boolean }>`
 
 	${({ $checked, theme }) =>
 		$checked &&
-		`
-    background-color: ${theme.colors.accent.primary};
-    border-color: ${theme.colors.accent.primary};
-  `}
+		css`
+			background-color: ${theme.colors.accent.primary};
+			border-color: ${theme.colors.accent.primary};
+		`}
 `;
 
 export const Label = styled.span`
-	font-family: ${({ theme }) => theme.fonts.primary};
-	font-size: ${({ theme }) => theme.fontSizes.sm};
-	font-weight: ${({ theme }) => theme.fontWeights.medium};
-	line-height: 1.5;
-	color: ${({ theme }) => theme.colors.text.tertiary};
+	${({ theme }) => css`
+		font-family: ${theme.fonts.primary};
+		font-size: ${theme.fontSizes.sm};
+		font-weight: ${theme.fontWeights.medium};
+		line-height: 1.5;
+		color: ${theme.colors.text.tertiary};
+	`}
 `;

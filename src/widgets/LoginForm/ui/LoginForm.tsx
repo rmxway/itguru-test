@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '../model/schema';
@@ -6,6 +7,8 @@ import type { LoginFormData } from '../model/schema';
 import { Input } from '@shared/ui/Input';
 import { Button } from '@shared/ui/Button';
 import { Checkbox } from '@shared/ui/Checkbox';
+import { ErrorMessage } from '@shared/ui/ErrorMessage';
+import { useAuth } from '@shared/lib/hooks';
 import {
 	UserIcon,
 	LockIcon,
@@ -23,25 +26,27 @@ import {
 	FieldsBlock,
 	InputsGroup,
 	CheckboxRow,
+	ApiErrorBlock,
 	ButtonBlock,
 	Divider,
 	DividerLine,
 	DividerText,
-	FooterText,
-	CreateLink,
 } from './styled';
 
 export function LoginForm() {
 	const [showPassword, setShowPassword] = useState(false);
+	const navigate = useNavigate();
+	const { login, isLoading, error, clearError } = useAuth();
 
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isValid },
 		setValue,
 		watch,
 	} = useForm<LoginFormData>({
 		resolver: yupResolver(loginSchema),
+		mode: 'onChange',
 		defaultValues: {
 			login: '',
 			password: '',
@@ -51,8 +56,12 @@ export function LoginForm() {
 
 	const loginValue = watch('login'); // eslint-disable-line react-hooks/incompatible-library -- RHF watch for conditional clear button
 
-	const onSubmit = (data: LoginFormData) => {
-		console.log('Form submitted:', data);
+	const onSubmit = async (data: LoginFormData) => {
+		clearError();
+		const success = await login(data.login, data.password, data.rememberMe);
+		if (success) {
+			navigate('/products', { replace: true });
+		}
 	};
 
 	return (
@@ -72,10 +81,10 @@ export function LoginForm() {
 						label="Логин"
 						placeholder="Введите логин"
 						error={errors.login?.message}
-						leftIcon={<UserIcon size={24} color="text.tertiary" />}
+						leftIcon={<UserIcon size={24} color="text.icon" />}
 						rightIcon={
 							loginValue ? (
-								<CloseIcon size={24} color="text.tertiary" />
+								<CloseIcon size={24} color="text.icon" />
 							) : undefined
 						}
 						onRightIconClick={() => setValue('login', '')}
@@ -86,12 +95,12 @@ export function LoginForm() {
 						type={showPassword ? 'text' : 'password'}
 						placeholder="Введите пароль"
 						error={errors.password?.message}
-						leftIcon={<LockIcon size={24} color="text.tertiary" />}
+						leftIcon={<LockIcon size={24} color="text.icon" />}
 						rightIcon={
 							showPassword ? (
-								<EyeOffIcon size={24} color="text.tertiary" />
+								<EyeOffIcon size={24} color="text.icon" />
 							) : (
-								<EyeOnIcon size={24} color="text.tertiary" />
+								<EyeOnIcon size={24} color="text.icon" />
 							)
 						}
 						onRightIconClick={() =>
@@ -109,8 +118,16 @@ export function LoginForm() {
 					/>
 				</CheckboxRow>
 
+				{error && (
+					<ApiErrorBlock>
+						<ErrorMessage>{error}</ErrorMessage>
+					</ApiErrorBlock>
+				)}
+
 				<ButtonBlock>
-					<Button type="submit">Войти</Button>
+					<Button type="submit" disabled={!isValid || isLoading}>
+						{isLoading ? 'Вход...' : 'Войти'}
+					</Button>
 					<Divider>
 						<DividerLine />
 						<DividerText>или</DividerText>
@@ -118,10 +135,6 @@ export function LoginForm() {
 					</Divider>
 				</ButtonBlock>
 			</FieldsBlock>
-
-			<FooterText>
-				Нет аккаунта? <CreateLink href="#">Создать</CreateLink>
-			</FooterText>
 		</Form>
 	);
 }

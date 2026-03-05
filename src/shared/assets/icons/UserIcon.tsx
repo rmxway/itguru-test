@@ -2,7 +2,7 @@ import { getThemeColor } from '@app/styles/theme';
 import type { IconProps } from '@shared/types';
 
 export function UserIcon({ size = 24, color = 'text.primary' }: IconProps) {
-	const fillColor = getThemeColor(color);
+	const strokeColor = getThemeColor(color);
 	return (
 		<svg
 			width={size}
@@ -11,9 +11,17 @@ export function UserIcon({ size = 24, color = 'text.primary' }: IconProps) {
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
 		>
+			<circle
+				cx="12"
+				cy="7.25"
+				r="4"
+				stroke={strokeColor}
+				strokeWidth="2"
+			/>
 			<path
-				d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"
-				fill={fillColor}
+				d="M9 13.75H15C16.6569 13.75 18 15.0931 18 16.75V20.75H6V16.75C6 15.0931 7.34315 13.75 9 13.75Z"
+				stroke={strokeColor}
+				strokeWidth="2"
 			/>
 		</svg>
 	);

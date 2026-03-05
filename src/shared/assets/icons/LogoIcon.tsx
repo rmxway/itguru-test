@@ -6,8 +6,8 @@ export function LogoIcon({ size = 35, color = 'text.primary' }: IconProps) {
 	return (
 		<svg
 			width={size}
-			height={(size * 34) / 35}
-			viewBox="0 0 35 34"
+			height={size}
+			viewBox="0 0 34 34"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
 		>

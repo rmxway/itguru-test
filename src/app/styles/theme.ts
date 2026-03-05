@@ -1,5 +1,13 @@
 import type { ThemeColorKey } from '@shared/types';
 
+export const breakpoints = {
+	xs: 480,
+	sm: 768,
+	md: 1024,
+	lg: 1280,
+	xl: 1536,
+} as const;
+
 export const theme = {
 	colors: {
 		background: '#F9F9F9',
@@ -9,6 +17,7 @@ export const theme = {
 			secondary: '#E0E0E0',
 			tertiary: '#9C9C9C',
 			quaternary: '#6C6C6C',
+			icon: '#CACACA',
 		},
 		accent: {
 			primary: '#242EDB',
@@ -58,6 +67,7 @@ const colorMap: Record<string, string> = {
 	'text.secondary': theme.colors.text.secondary,
 	'text.tertiary': theme.colors.text.tertiary,
 	'text.quaternary': theme.colors.text.quaternary,
+	'text.icon': theme.colors.text.icon,
 	'accent.primary': theme.colors.accent.primary,
 	'accent.secondary': theme.colors.accent.secondary,
 };

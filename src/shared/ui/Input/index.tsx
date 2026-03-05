@@ -1,4 +1,4 @@
-import { forwardRef, useId } from 'react';
+import { forwardRef, useCallback, useId } from 'react';
 import {
 	Wrapper,
 	Label,
@@ -27,8 +27,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 		const generatedId = useId();
 		const inputId = id ?? `input-${generatedId}`;
 
+		const focusInput = useCallback(() => {
+			document.getElementById(inputId)?.focus();
+		}, [inputId]);
+
 		return (
-			<Wrapper>
+			<Wrapper onClick={focusInput}>
 				{label && (
 					<Label htmlFor={inputId} id={`${inputId}-label`}>
 						{label}
@@ -39,6 +43,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 					<StyledInput
 						ref={ref}
 						id={inputId}
+						autoComplete="off"
 						aria-invalid={Boolean(error)}
 						aria-describedby={
 							error ? `${inputId}-error` : undefined
@@ -47,9 +52,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 					/>
 					{rightIcon && (
 						<IconWrapper
-							onClick={onRightIconClick}
+							onClick={(e) => {
+								if (onRightIconClick) {
+									e.stopPropagation();
+									onRightIconClick();
+								}
+							}}
 							role={onRightIconClick ? 'button' : undefined}
-							tabIndex={onRightIconClick ? 0 : undefined}
+							tabIndex={-1}
+							$clickable={Boolean(onRightIconClick)}
 							onKeyDown={
 								onRightIconClick
 									? (e) => {

@@ -23,7 +23,7 @@ export const InputWrapper = styled.div<{ $hasError?: boolean }>`
 	width: 100%;
 	padding: 14px 16px;
 	background-color: ${({ theme }) => theme.colors.white};
-	border: 1.5px solid
+	border: 2px solid
 		${({ theme, $hasError }) =>
 			$hasError ? theme.colors.error : theme.colors.border};
 	border-radius: ${({ theme }) => theme.radii.sm};
@@ -51,12 +51,22 @@ export const StyledInput = styled.input`
 	&::placeholder {
 		color: ${({ theme }) => theme.colors.text.tertiary};
 	}
+
+	&:-webkit-autofill,
+	&:-webkit-autofill:hover,
+	&:-webkit-autofill:focus,
+	&:-webkit-autofill:active {
+		-webkit-box-shadow: 0 0 0 30px ${({ theme }) => theme.colors.white}
+			inset;
+		box-shadow: 0 0 0 30px ${({ theme }) => theme.colors.white} inset;
+	}
 `;
 
-export const IconWrapper = styled.div`
+export const IconWrapper = styled.div<{ $clickable?: boolean }>`
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	flex-shrink: 0;
 	cursor: pointer;
+	pointer-events: ${({ $clickable }) => ($clickable ? 'auto' : 'none')};
 `;

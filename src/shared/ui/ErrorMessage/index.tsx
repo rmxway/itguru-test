@@ -12,8 +12,6 @@ export function ErrorMessage({
 	role = 'alert',
 }: ErrorMessageProps) {
 	return (
-		<StyledErrorMessage id={id} role={role}>
-			{children}
-		</StyledErrorMessage>
+		<StyledErrorMessage {...{ id, role }}>{children}</StyledErrorMessage>
 	);
 }

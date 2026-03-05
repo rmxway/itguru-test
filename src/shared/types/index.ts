@@ -9,6 +9,7 @@ export type ThemeColorKey =
 	| 'text.secondary'
 	| 'text.tertiary'
 	| 'text.quaternary'
+	| 'text.icon'
 	| 'accent.primary'
 	| 'accent.secondary';
 

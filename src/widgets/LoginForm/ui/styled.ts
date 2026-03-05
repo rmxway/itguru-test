@@ -72,6 +72,11 @@ export const CheckboxRow = styled.div`
 	gap: 10px;
 `;
 
+export const ApiErrorBlock = styled.div`
+	width: 100%;
+	text-align: center;
+`;
+
 export const ButtonBlock = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -88,7 +93,7 @@ export const Divider = styled.div`
 
 export const DividerLine = styled.div`
 	flex: 1;
-	height: 1px;
+	height: 2px;
 	background-color: ${({ theme }) => theme.colors.border};
 `;
 
@@ -98,29 +103,4 @@ export const DividerText = styled.span`
 	font-weight: ${({ theme }) => theme.fontWeights.medium};
 	line-height: 1.5;
 	color: ${({ theme }) => theme.colors.text.secondary};
-`;
-
-export const FooterText = styled.p`
-	font-family: ${({ theme }) => theme.fonts.primary};
-	font-size: ${({ theme }) => theme.fontSizes.md};
-	font-weight: ${({ theme }) => theme.fontWeights.regular};
-	line-height: 1.5;
-	color: ${({ theme }) => theme.colors.text.quaternary};
-	text-align: center;
-	width: 100%;
-`;
-
-export const CreateLink = styled.a`
-	font-family: ${({ theme }) => theme.fonts.primary};
-	font-size: ${({ theme }) => theme.fontSizes.md};
-	font-weight: ${({ theme }) => theme.fontWeights.semibold};
-	line-height: 1.5;
-	color: ${({ theme }) => theme.colors.accent.primary};
-	text-decoration: underline;
-	text-decoration-skip-ink: none;
-	cursor: pointer;
-
-	&:hover {
-		opacity: 0.9;
-	}
 `;
