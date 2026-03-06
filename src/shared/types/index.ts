@@ -10,6 +10,7 @@ export type ThemeColorKey =
 	| 'text.tertiary'
 	| 'text.quaternary'
 	| 'text.icon'
+	| 'text.placeholder'
 	| 'accent.primary'
 	| 'accent.secondary';
 

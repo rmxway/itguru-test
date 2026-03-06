@@ -15,6 +15,9 @@ export default defineConfig({
 					) {
 						return 'react-vendor';
 					}
+					if (id.includes('node_modules/@tanstack/react-query/')) {
+						return 'query';
+					}
 					if (id.includes('node_modules/react-router-dom/')) {
 						return 'router';
 					}

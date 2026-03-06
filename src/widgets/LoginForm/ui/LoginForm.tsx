@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '../model/schema';
 import type { LoginFormData } from '../model/schema';
@@ -41,9 +41,9 @@ export function LoginForm() {
 	const {
 		register,
 		handleSubmit,
+		control,
 		formState: { errors, isValid },
 		setValue,
-		watch,
 	} = useForm<LoginFormData>({
 		resolver: yupResolver(loginSchema),
 		mode: 'onChange',
@@ -54,7 +54,12 @@ export function LoginForm() {
 		},
 	});
 
-	const loginValue = watch('login');
+	const loginValue = useWatch({ name: 'login', control, defaultValue: '' });
+	const rememberMeValue = useWatch({
+		name: 'rememberMe',
+		control,
+		defaultValue: false,
+	});
 
 	const onSubmit = async (data: LoginFormData) => {
 		reset();
@@ -122,7 +127,7 @@ export function LoginForm() {
 					<Checkbox
 						label="Запомнить данные"
 						{...register('rememberMe')}
-						checked={watch('rememberMe')}
+						checked={Boolean(rememberMeValue)}
 					/>
 				</CheckboxRow>
 

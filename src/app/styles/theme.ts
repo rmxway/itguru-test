@@ -11,6 +11,7 @@ export const breakpoints = {
 export const theme = {
 	colors: {
 		background: '#F9F9F9',
+		pageBackground: '#F6F6F6',
 		white: '#FFFFFF',
 		text: {
 			primary: '#232323',
@@ -18,13 +19,22 @@ export const theme = {
 			tertiary: '#9C9C9C',
 			quaternary: '#6C6C6C',
 			icon: '#CACACA',
+			black: '#222222',
+			placeholder: '#999999',
+			muted: '#969B9F',
+			tableHeader: '#B2B3B9',
 		},
 		accent: {
 			primary: '#242EDB',
 			secondary: '#367AFF',
+			pagination: '#797FEA',
 		},
 		border: '#EDEDED',
+		borderLight: '#E2E2E2',
+		borderGray: '#ECECEB',
 		error: '#FF3B30',
+		ratingLow: '#F11010',
+		inputBg: '#F3F3F3',
 	},
 	fonts: {
 		primary:
@@ -53,6 +63,7 @@ export const theme = {
 		button: '0px 8px 8px 0px rgba(54,122,255,0.03)',
 		buttonInset: 'inset 0px -2px 0px 1px rgba(0,0,0,0.08)',
 		logo: '0px 0px 0px 2px white, 0px 12px 8px 0px rgba(0,0,0,0.03)',
+		pagination: '0px 20px 50px 0px rgba(0,0,0,0.12)',
 	},
 } as const;
 
@@ -68,6 +79,7 @@ const colorMap: Record<string, string> = {
 	'text.tertiary': theme.colors.text.tertiary,
 	'text.quaternary': theme.colors.text.quaternary,
 	'text.icon': theme.colors.text.icon,
+	'text.placeholder': theme.colors.text.placeholder,
 	'accent.primary': theme.colors.accent.primary,
 	'accent.secondary': theme.colors.accent.secondary,
 };

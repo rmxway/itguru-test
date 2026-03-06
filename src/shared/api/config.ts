@@ -6,4 +6,5 @@ export const API_ENDPOINTS = {
 		me: '/auth/me',
 		refresh: '/auth/refresh',
 	},
+	products: '/products',
 } as const;
