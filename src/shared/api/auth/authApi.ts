@@ -20,6 +20,7 @@ export class AuthApiError extends Error {
 export async function login(
 	username: string,
 	password: string,
+	signal?: AbortSignal,
 ): Promise<LoginResponse> {
 	const body: LoginRequest = { username, password };
 
@@ -29,6 +30,7 @@ export async function login(
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify(body),
+		signal,
 	});
 
 	if (!response.ok) {

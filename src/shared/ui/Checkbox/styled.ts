@@ -24,8 +24,8 @@ export const CheckboxBox = styled.div<{ $checked: boolean }>`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 24px;
-	height: 24px;
+	width: 20px;
+	height: 20px;
 	flex-shrink: 0;
 	border: 2px solid ${({ theme }) => theme.colors.border};
 	border-radius: 4px;

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Form = styled.form`
 	display: flex;
@@ -36,20 +36,24 @@ export const TextBlock = styled.div`
 `;
 
 export const Title = styled.h1`
-	font-family: ${({ theme }) => theme.fonts.primary};
-	font-size: ${({ theme }) => theme.fontSizes.xl};
-	font-weight: ${({ theme }) => theme.fontWeights.semibold};
-	line-height: 1.1;
-	letter-spacing: -0.6px;
-	color: ${({ theme }) => theme.colors.text.primary};
+	${({ theme }) => css`
+		font-family: ${theme.fonts.primary};
+		font-size: ${theme.fontSizes.xl};
+		font-weight: ${theme.fontWeights.semibold};
+		line-height: 1.1;
+		letter-spacing: -0.6px;
+		color: ${theme.colors.text.primary};
+	`}
 `;
 
 export const Subtitle = styled.p`
-	font-family: ${({ theme }) => theme.fonts.primary};
-	font-size: ${({ theme }) => theme.fontSizes.md};
-	font-weight: ${({ theme }) => theme.fontWeights.medium};
-	line-height: 1.5;
-	color: ${({ theme }) => theme.colors.text.secondary};
+	${({ theme }) => css`
+		font-family: ${theme.fonts.primary};
+		font-size: ${theme.fontSizes.md};
+		font-weight: ${theme.fontWeights.medium};
+		line-height: 1.5;
+		color: ${theme.colors.text.secondary};
+	`}
 `;
 
 export const FieldsBlock = styled.div`

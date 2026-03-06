@@ -8,7 +8,7 @@ import { Input } from '@shared/ui/Input';
 import { Button } from '@shared/ui/Button';
 import { Checkbox } from '@shared/ui/Checkbox';
 import { ErrorMessage } from '@shared/ui/ErrorMessage';
-import { useAuth } from '@shared/lib/hooks';
+import { useLoginMutation, getLoginErrorMessage } from '@shared/lib/hooks';
 import {
 	UserIcon,
 	LockIcon,
@@ -36,7 +36,7 @@ import {
 export function LoginForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const navigate = useNavigate();
-	const { login, isLoading, error, clearError } = useAuth();
+	const { mutateAsync: login, isPending, error, reset } = useLoginMutation();
 
 	const {
 		register,
@@ -54,13 +54,19 @@ export function LoginForm() {
 		},
 	});
 
-	const loginValue = watch('login'); // eslint-disable-line react-hooks/incompatible-library -- RHF watch for conditional clear button
+	const loginValue = watch('login');
 
 	const onSubmit = async (data: LoginFormData) => {
-		clearError();
-		const success = await login(data.login, data.password, data.rememberMe);
-		if (success) {
+		reset();
+		try {
+			await login({
+				username: data.login,
+				password: data.password,
+				rememberMe: data.rememberMe,
+			});
 			navigate('/products', { replace: true });
+		} catch {
+			// Error handled by mutation state
 		}
 	};
 
@@ -81,6 +87,7 @@ export function LoginForm() {
 						label="Логин"
 						placeholder="Введите логин"
 						error={errors.login?.message}
+						disabled={isPending}
 						leftIcon={<UserIcon size={24} color="text.icon" />}
 						rightIcon={
 							loginValue ? (
@@ -95,6 +102,7 @@ export function LoginForm() {
 						type={showPassword ? 'text' : 'password'}
 						placeholder="Введите пароль"
 						error={errors.password?.message}
+						disabled={isPending}
 						leftIcon={<LockIcon size={24} color="text.icon" />}
 						rightIcon={
 							showPassword ? (
@@ -120,19 +128,24 @@ export function LoginForm() {
 
 				{error && (
 					<ApiErrorBlock>
-						<ErrorMessage>{error}</ErrorMessage>
+						<ErrorMessage>
+							{getLoginErrorMessage(error)}
+						</ErrorMessage>
 					</ApiErrorBlock>
 				)}
 
 				<ButtonBlock>
-					<Button type="submit" disabled={!isValid || isLoading}>
-						{isLoading ? 'Вход...' : 'Войти'}
+					<Button type="submit" disabled={!isValid || isPending}>
+						{isPending ? 'Вход...' : 'Войти'}
 					</Button>
 					<Divider>
 						<DividerLine />
 						<DividerText>или</DividerText>
 						<DividerLine />
 					</Divider>
+					<TextBlock>
+						<Subtitle>Создать аккаунт (в разработке)</Subtitle>
+					</TextBlock>
 				</ButtonBlock>
 			</FieldsBlock>
 		</Form>

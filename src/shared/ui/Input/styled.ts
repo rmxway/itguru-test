@@ -22,6 +22,7 @@ export const InputWrapper = styled.div<{ $hasError?: boolean }>`
 	gap: 14px;
 	width: 100%;
 	padding: 14px 16px;
+	height: 55px;
 	background-color: ${({ theme }) => theme.colors.white};
 	border: 2px solid
 		${({ theme, $hasError }) =>
@@ -32,6 +33,13 @@ export const InputWrapper = styled.div<{ $hasError?: boolean }>`
 	&:focus-within {
 		border-color: ${({ theme, $hasError }) =>
 			$hasError ? theme.colors.error : theme.colors.accent.primary};
+	}
+
+	&:has(input:disabled) {
+		background-color: ${({ theme }) => theme.colors.border};
+		opacity: 0.75;
+		pointer-events: none;
+		cursor: not-allowed;
 	}
 `;
 
@@ -50,6 +58,10 @@ export const StyledInput = styled.input`
 
 	&::placeholder {
 		color: ${({ theme }) => theme.colors.text.tertiary};
+	}
+
+	&:disabled {
+		cursor: not-allowed;
 	}
 
 	&:-webkit-autofill,

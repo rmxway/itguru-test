@@ -14,7 +14,7 @@ export const theme = {
 		white: '#FFFFFF',
 		text: {
 			primary: '#232323',
-			secondary: '#E0E0E0',
+			secondary: '#c4c4c4',
 			tertiary: '#9C9C9C',
 			quaternary: '#6C6C6C',
 			icon: '#CACACA',

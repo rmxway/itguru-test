@@ -1,13 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useAuth } from '@shared/lib/hooks';
-import { getUser } from '@shared/lib/storage';
+import { getUser, removeToken, removeUser } from '@shared/lib/storage';
 import { Page, Header, Username, LogoutLink, Content, Title } from './styled';
 import { Container, Flex } from '@shared/layouts';
 
 export function ProductsPage() {
 	const navigate = useNavigate();
-	const { logout } = useAuth();
 	const user = getUser();
 
 	useEffect(() => {
@@ -17,7 +15,8 @@ export function ProductsPage() {
 	}, [user, navigate]);
 
 	const handleLogout = () => {
-		logout();
+		removeToken();
+		removeUser();
 		navigate('/login', { replace: true, state: { fromLogout: true } });
 	};
 
