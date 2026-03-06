@@ -10,30 +10,42 @@ export default defineConfig({
 		rollupOptions: {
 			output: {
 				manualChunks(id) {
+					if (!id.includes('node_modules')) return;
+
 					if (
-						id.includes('node_modules/react/') ||
-						id.includes('node_modules/react-dom/')
+						id.includes('/react/') ||
+						id.includes('/react-dom/') ||
+						id.includes('/scheduler/')
 					) {
 						return 'react-vendor';
 					}
-					if (id.includes('node_modules/@tanstack/react-query/')) {
+					if (id.includes('/@tanstack/')) {
 						return 'query';
 					}
-					if (id.includes('node_modules/react-router-dom/')) {
+					if (
+						id.includes('/react-router') ||
+						id.includes('/@remix-run/')
+					) {
 						return 'router';
 					}
 					if (
-						id.includes('node_modules/react-hook-form/') ||
-						id.includes('node_modules/@hookform/') ||
-						id.includes('node_modules/yup/')
+						id.includes('/react-hook-form/') ||
+						id.includes('/@hookform/') ||
+						id.includes('/yup/')
 					) {
 						return 'form';
 					}
 					if (
-						id.includes('node_modules/styled-components/') ||
-						id.includes('node_modules/styled-media-query/')
+						id.includes('/styled-components/') ||
+						id.includes('/styled-media-query/')
 					) {
 						return 'styled';
+					}
+					if (id.includes('/framer-motion/')) {
+						return 'motion';
+					}
+					if (id.includes('/react-hot-toast/')) {
+						return 'toast';
 					}
 				},
 			},

@@ -1,3 +1,4 @@
+import { media } from '@app/styles/media';
 import styled, { css } from 'styled-components';
 
 export const Form = styled.form`
@@ -5,6 +6,7 @@ export const Form = styled.form`
 	flex-direction: column;
 	gap: 32px;
 	width: 100%;
+	max-width: 100%;
 `;
 
 export const LogoContainer = styled.div`
@@ -43,6 +45,10 @@ export const Title = styled.h1`
 		line-height: 1.1;
 		letter-spacing: -0.6px;
 		color: ${theme.colors.text.primary};
+
+		${media.lessThan('xs')`
+			font-size: ${theme.fontSizes.lg};
+		`}
 	`}
 `;
 

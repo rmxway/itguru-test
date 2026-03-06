@@ -1,3 +1,4 @@
+import { media } from '@app/styles/media';
 import styled from 'styled-components';
 
 export const Page = styled.div`
@@ -8,6 +9,10 @@ export const Page = styled.div`
 	justify-content: center;
 	background-color: ${({ theme }) => theme.colors.background};
 	padding: 24px;
+
+	${media.lessThan('xs')`
+		padding: 10px;
+	`}
 `;
 
 export const Card = styled.div`
@@ -33,4 +38,8 @@ export const CardInner = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+
+	${media.lessThan('xs')`
+		padding: 20px;
+	`}
 `;

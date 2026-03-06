@@ -48,7 +48,7 @@ export function ProductsPage() {
 						onKeyDown={handleSearchKeyDown}
 						aria-label="Поиск товаров"
 						leftIcon={
-							<SearchIcon size={24} color="text.placeholder" />
+							<SearchIcon size={26} color="text.placeholder" />
 						}
 						rightIcon={
 							searchQuery ? (

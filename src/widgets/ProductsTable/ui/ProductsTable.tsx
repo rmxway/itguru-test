@@ -165,7 +165,7 @@ export function ProductsTable({
 					</AddButton>
 				</TableActions>
 			</TableHeader>
-			{products.length === 0 && <>Товары не найдены</>}
+			{products.length === 0 && !isFetching && <>Товары не найдены</>}
 			{products.length > 0 && (
 				<>
 					<ScrollForTable>

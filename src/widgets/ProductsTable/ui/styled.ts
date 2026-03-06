@@ -12,12 +12,16 @@ export const TableWrapper = styled.div`
 		border-radius: ${theme.radii.sm};
 		padding: 30px;
 		width: 100%;
+
+		${media.lessThan('md')`
+			padding: 20px;
+			gap: 10px;
+		`}
 	`}
 `;
 
 export const ScrollForTable = styled.div`
 	${({ theme }) => css`
-		width: 100%;
 		overflow-x: auto;
 		-webkit-overflow-scrolling: touch;
 
@@ -56,6 +60,10 @@ export const TableTitle = styled.h2`
 		line-height: 20px;
 		color: ${theme.colors.text.primary};
 		margin: 0;
+
+		${media.lessThan('md')`
+			font-size: ${theme.fontSizes.sm};
+		`}
 	`}
 `;
 
@@ -212,23 +220,38 @@ export const ProductInfo = styled.div`
 	display: contents;
 `;
 
-export const ProductImage = styled.img`
+export const ProductImageContainer = styled.div`
+	position: relative;
 	width: 48px;
 	height: 48px;
-	border-radius: 8px;
-	border: 1px solid ${({ theme }) => theme.colors.borderGray};
-	object-fit: cover;
 	flex-shrink: 0;
 `;
 
-export const ProductImagePlaceholder = styled.div`
-	${({ theme }) => css`
+export const ProductImage = styled.img<{ $loaded?: boolean }>`
+	${({ theme, $loaded }) => css`
+		position: absolute;
+		inset: 0;
+		width: 48px;
+		height: 48px;
+		border-radius: 8px;
+		border: 1px solid ${theme.colors.borderGray};
+		object-fit: cover;
+		opacity: ${$loaded ? 1 : 0};
+		transition: opacity 0.3s ease;
+	`}
+`;
+
+export const ProductImagePlaceholder = styled.div<{ $visible?: boolean }>`
+	${({ theme, $visible = true }) => css`
+		position: absolute;
+		inset: 0;
 		width: 48px;
 		height: 48px;
 		border-radius: 8px;
 		border: 1px solid ${theme.colors.borderGray};
 		background-color: #c4c4c4;
-		flex-shrink: 0;
+		opacity: ${$visible ? 1 : 0};
+		transition: opacity 0.3s ease;
 	`}
 `;
 

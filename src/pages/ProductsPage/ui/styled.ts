@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import { media } from '@app/styles/media';
+import { InputWrapper, StyledInput } from '@shared/ui/Input/styled';
 
 export const Page = styled.div`
 	${({ theme }) => css`
@@ -44,7 +45,7 @@ export const HeaderRight = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: end;
-	gap: 30px;
+	gap: 20px;
 
 	${media.lessThan('md')`
 		order: -1;
@@ -59,6 +60,10 @@ export const PageTitle = styled.h1`
 		font-weight: ${theme.fontWeights.semibold};
 		color: ${theme.colors.text.primary};
 		margin: 0;
+
+		${media.lessThan('md')`
+			font-size: ${theme.fontSizes.md};
+		`}
 	`}
 `;
 
@@ -66,6 +71,16 @@ export const SearchInputWrapper = styled.div`
 	flex: 1;
 	max-width: 1023px;
 	min-width: 0;
+
+	${InputWrapper} {
+		background-color: ${({ theme }) => theme.colors.inputBg};
+		height: 48px;
+		font-size: 14px;
+	}
+
+	${StyledInput} {
+		font-size: ${({ theme }) => theme.fontSizes.xs};
+	}
 
 	${media.lessThan('md')`
 		max-width: 100%;
@@ -78,6 +93,10 @@ export const Username = styled.span`
 		font-size: ${theme.fontSizes.md};
 		font-weight: ${theme.fontWeights.semibold};
 		color: ${theme.colors.text.primary};
+
+		${media.lessThan('md')`
+			font-size: ${theme.fontSizes.sm};
+		`}
 	`}
 `;
 
@@ -93,6 +112,10 @@ export const LogoutLink = styled.a`
 		&:hover {
 			text-decoration: underline;
 		}
+
+		${media.lessThan('md')`
+			font-size: ${theme.fontSizes.sm};
+		`}
 	`}
 `;
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -61,6 +61,10 @@ export function LoginForm() {
 		defaultValue: false,
 	});
 
+	useEffect(() => {
+		document.getElementById('login-input')?.focus();
+	}, []);
+
 	const onSubmit = async (data: LoginFormData) => {
 		reset();
 		try {
@@ -89,9 +93,9 @@ export function LoginForm() {
 			<FieldsBlock>
 				<InputsGroup>
 					<Input
+						id="login-input"
 						label="Логин"
 						placeholder="Введите логин"
-						error={errors.login?.message}
 						disabled={isPending}
 						leftIcon={<UserIcon size={24} color="text.icon" />}
 						rightIcon={

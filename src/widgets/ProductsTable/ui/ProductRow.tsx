@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import type { Product } from '@shared/api/products';
 import { Checkbox } from '@shared/ui';
 import { PlusIcon, DotsIcon } from '@shared/assets/icons';
 import {
 	ProductRowWrapper,
 	ProductInfo,
+	ProductImageContainer,
 	ProductImage,
 	ProductImagePlaceholder,
 	ProductNameBlock,
@@ -30,6 +32,27 @@ function formatPrice(price: number): { int: string; dec: string } {
 	return { int: formatted, dec: `,${decPart}` };
 }
 
+function ProductImageWithPlaceholder({
+	src,
+	alt,
+}: {
+	src: string;
+	alt: string;
+}) {
+	const [loaded, setLoaded] = useState(false);
+	return (
+		<ProductImageContainer>
+			<ProductImagePlaceholder $visible={!loaded} />
+			<ProductImage
+				src={src}
+				alt={alt}
+				$loaded={loaded}
+				onLoad={() => setLoaded(true)}
+			/>
+		</ProductImageContainer>
+	);
+}
+
 export function ProductRow({
 	product,
 	selected = false,
@@ -53,18 +76,18 @@ export function ProductRow({
 						aria-label={`Выбрать ${product.title}`}
 					/>
 				</span>
-				{product.thumbnail ? (
-					<ProductImage src={product.thumbnail} alt={product.title} />
-				) : (
-					<ProductImagePlaceholder />
-				)}
+				<ProductImageWithPlaceholder
+					key={product.thumbnail}
+					src={product.thumbnail}
+					alt={product.title}
+				/>
 				<ProductNameBlock>
 					<ProductName>{product.title}</ProductName>
 					<ProductCategory>{product.category}</ProductCategory>
 				</ProductNameBlock>
 			</ProductInfo>
 			<ProductDetails>
-				<DetailCell $bold>{product.brand}</DetailCell>
+				<DetailCell $bold>{product.brand || '–'}</DetailCell>
 				<DetailCell>{sku}</DetailCell>
 				<RatingCell $low={ratingLow}>
 					{product.rating.toFixed(1)}/5

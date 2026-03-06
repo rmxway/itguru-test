@@ -3,4 +3,4 @@ export const MAX_VISIBLE_PAGES = 5;
 export const LOGIN_TIMEOUT_MS = 20000;
 export const TABLE_MIN_WIDTH = 1200;
 export const TABLE_GRID_COLUMNS =
-	'45px 60px minmax(200px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) 120px 120px 150px';
+	'40px 65px minmax(200px, 1fr) minmax(160px, 1fr) minmax(160px, 0.75fr) minmax(120px, 0.2fr) minmax(140px, 0.2fr) 150px';

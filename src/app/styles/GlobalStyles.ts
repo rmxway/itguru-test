@@ -12,7 +12,7 @@ export const GlobalStyles = createGlobalStyle`
     font-size: 16px;
     color: ${({ theme }) => theme.colors.text.primary};
     background-color: ${({ theme }) => theme.colors.background};
-    min-width: 440px;
+    min-width: 320px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
