@@ -15,8 +15,3 @@ export interface ProductsResponse {
 	skip: number;
 	limit: number;
 }
-
-export interface FetchProductsParams {
-	page?: number;
-	limit?: number;
-}

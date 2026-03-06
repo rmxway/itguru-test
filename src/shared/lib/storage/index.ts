@@ -1,9 +1,2 @@
-export {
-	saveToken,
-	getToken,
-	removeToken,
-	saveUser,
-	getUser,
-	removeUser,
-} from './authStorage';
-export type { StoredUser } from './authStorage';
+export * from './authStorage';
+export * from './sortStorage';

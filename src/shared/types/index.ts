@@ -11,6 +11,7 @@ export type ThemeColorKey =
 	| 'text.quaternary'
 	| 'text.icon'
 	| 'text.placeholder'
+	| 'text.tableHeader'
 	| 'accent.primary'
 	| 'accent.secondary';
 

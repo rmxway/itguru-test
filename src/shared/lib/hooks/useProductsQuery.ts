@@ -1,12 +1,61 @@
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchProducts } from '@shared/api/products';
+import { fetchProducts, searchProducts } from '@shared/api/products';
+import type { Product } from '@shared/api/products';
 import { PRODUCTS_PER_PAGE } from '@shared/constants';
+import type { SortField, SortOrder } from '@shared/lib/storage';
 
-export function useProductsQuery(page: number) {
-	const query = useQuery({
-		queryKey: ['products', page],
-		queryFn: ({ signal }) => fetchProducts(page, signal),
+export interface UseProductsQueryParams {
+	page: number;
+	searchQuery?: string | null;
+	sortBy?: SortField | null;
+	order?: SortOrder | null;
+}
+
+function sortProducts(
+	products: Product[],
+	sortBy: SortField | null,
+	order: SortOrder | null,
+): Product[] {
+	if (!sortBy || !order) return products;
+
+	return [...products].sort((a, b) => {
+		const aVal = a[sortBy];
+		const bVal = b[sortBy];
+
+		if (typeof aVal === 'number' && typeof bVal === 'number') {
+			return order === 'asc' ? aVal - bVal : bVal - aVal;
+		}
+
+		const aStr = String(aVal ?? '');
+		const bStr = String(bVal ?? '');
+		const cmp = aStr.localeCompare(bStr);
+		return order === 'asc' ? cmp : -cmp;
 	});
+}
+
+export function useProductsQuery({
+	page,
+	searchQuery = null,
+	sortBy = null,
+	order = null,
+}: UseProductsQueryParams) {
+	const query = useQuery({
+		queryKey: ['products', page, searchQuery, sortBy, order],
+		queryFn: ({ signal }) =>
+			searchQuery
+				? searchProducts(searchQuery, page, signal)
+				: fetchProducts({ page, sortBy, order }, signal),
+		placeholderData: (previousData) => previousData,
+	});
+
+	const products = useMemo(() => {
+		const raw = query.data?.products ?? [];
+		if (searchQuery && sortBy && order) {
+			return sortProducts(raw, sortBy, order);
+		}
+		return raw;
+	}, [query.data?.products, searchQuery, sortBy, order]);
 
 	const total = query.data?.total ?? 0;
 	const totalPages = Math.ceil(total / PRODUCTS_PER_PAGE);
@@ -15,7 +64,7 @@ export function useProductsQuery(page: number) {
 
 	return {
 		...query,
-		products: query.data?.products ?? [],
+		products,
 		total,
 		totalPages,
 		start,

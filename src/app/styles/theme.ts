@@ -80,6 +80,7 @@ const colorMap: Record<string, string> = {
 	'text.quaternary': theme.colors.text.quaternary,
 	'text.icon': theme.colors.text.icon,
 	'text.placeholder': theme.colors.text.placeholder,
+	'text.tableHeader': theme.colors.text.tableHeader,
 	'accent.primary': theme.colors.accent.primary,
 	'accent.secondary': theme.colors.accent.secondary,
 };

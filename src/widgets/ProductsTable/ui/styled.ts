@@ -1,8 +1,10 @@
+import { media } from '@app/styles/media';
 import { TABLE_GRID_COLUMNS } from '@shared/constants';
 import styled, { css } from 'styled-components';
 
 export const TableWrapper = styled.div`
 	${({ theme }) => css`
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		gap: 40px;
@@ -131,17 +133,6 @@ export const ProductColumnHeader = styled.div`
 	display: contents;
 `;
 
-export const HeaderCheckbox = styled.div`
-	${({ theme }) => css`
-		width: 22px;
-		height: 22px;
-		flex-shrink: 0;
-		border: 1px solid ${theme.colors.text.tableHeader};
-		border-radius: 4px;
-		background-color: ${theme.colors.white};
-	`}
-`;
-
 export const HeaderLabel = styled.span`
 	grid-column: 2 / 4;
 	display: flex;
@@ -156,6 +147,29 @@ export const DetailsHeaderItem = styled.span`
 	text-align: center;
 `;
 
+export const SortableHeader = styled.button<{ $align?: 'left' | 'center' }>`
+	${({ $align = 'center' }) => css`
+		display: flex;
+		align-items: center;
+		justify-content: ${$align === 'left' ? 'flex-start' : 'center'};
+		gap: 4px;
+		width: 100%;
+		padding: 0;
+		background: none;
+		border: none;
+		font-family: inherit;
+		font-size: inherit;
+		font-weight: inherit;
+		color: inherit;
+		cursor: pointer;
+		transition: opacity 0.2s ease;
+
+		&:hover {
+			opacity: 0.8;
+		}
+	`}
+`;
+
 export const HeaderActionsSpacer = styled.div`
 	width: 133px;
 `;
@@ -164,8 +178,11 @@ export const ProductRows = styled.div`
 	display: contents;
 `;
 
-export const ProductRowWrapper = styled.div<{ $selected?: boolean }>`
-	${({ theme, $selected }) => css`
+export const ProductRowWrapper = styled.div<{
+	$selected?: boolean;
+	$clickable?: boolean;
+}>`
+	${({ theme, $selected, $clickable }) => css`
 		grid-column: 1 / -1;
 		display: grid;
 		grid-template-columns: ${TABLE_GRID_COLUMNS};
@@ -174,6 +191,7 @@ export const ProductRowWrapper = styled.div<{ $selected?: boolean }>`
 		border-top: 1px solid ${theme.colors.borderLight};
 		border-bottom: 1px solid ${theme.colors.borderLight};
 		position: relative;
+		cursor: ${$clickable ? 'pointer' : 'default'};
 
 		${$selected &&
 		css`
@@ -340,6 +358,11 @@ export const PaginationFooter = styled.div`
 	justify-content: space-between;
 	padding: 11px 0;
 	width: 100%;
+
+	${media.lessThan('sm')`
+		flex-direction: column;
+		gap: 20px;
+	`}
 `;
 
 export const PaginationInfo = styled.p`

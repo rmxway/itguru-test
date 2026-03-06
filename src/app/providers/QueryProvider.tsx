@@ -1,14 +1,6 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import type { ChildrenProps } from '@shared/types';
-
-const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			retry: 1,
-			refetchOnWindowFocus: false,
-		},
-	},
-});
+import { queryClient } from './queryClient';
 
 export function QueryProvider({ children }: ChildrenProps) {
 	return (

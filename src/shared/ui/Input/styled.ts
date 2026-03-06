@@ -28,7 +28,7 @@ export const InputWrapper = styled.div<{ $hasError?: boolean }>`
 		${({ theme, $hasError }) =>
 			$hasError ? theme.colors.error : theme.colors.border};
 	border-radius: ${({ theme }) => theme.radii.sm};
-	transition: border-color 0.2s ease;
+	transition: all 0.2s ease;
 
 	&:focus-within {
 		border-color: ${({ theme, $hasError }) =>

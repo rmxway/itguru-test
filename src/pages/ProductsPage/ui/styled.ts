@@ -62,24 +62,13 @@ export const PageTitle = styled.h1`
 	`}
 `;
 
-export const SearchInput = styled.div`
-	${({ theme }) => css`
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		flex: 1;
-		max-width: 1023px;
-		padding: 12px 20px;
-		background-color: ${theme.colors.inputBg};
-		border-radius: 8px;
-		color: ${theme.colors.text.placeholder};
-		font-family: ${theme.fonts.primary};
-		font-size: ${theme.fontSizes.xs};
-		line-height: 24px;
+export const SearchInputWrapper = styled.div`
+	flex: 1;
+	max-width: 1023px;
+	min-width: 0;
 
-		${media.lessThan('md')`
-			max-width: 100%;
-		`}
+	${media.lessThan('md')`
+		max-width: 100%;
 	`}
 `;
 

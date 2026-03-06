@@ -11,3 +11,4 @@ export * from './RefreshIcon';
 export * from './PlusCircleIcon';
 export * from './CaretLeftIcon';
 export * from './CaretRightIcon';
+export * from './SortIcon';

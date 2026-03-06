@@ -21,6 +21,7 @@ import {
 interface ProductRowProps {
 	product: Product;
 	selected?: boolean;
+	onSelectChange?: () => void;
 }
 
 function formatPrice(price: number): { int: string; dec: string } {
@@ -29,15 +30,29 @@ function formatPrice(price: number): { int: string; dec: string } {
 	return { int: formatted, dec: `,${decPart}` };
 }
 
-export function ProductRow({ product, selected = false }: ProductRowProps) {
+export function ProductRow({
+	product,
+	selected = false,
+	onSelectChange,
+}: ProductRowProps) {
 	const sku = product.sku ?? `SKU-${product.id}`;
 	const ratingLow = product.rating < 4;
 	const price = formatPrice(product.price);
 
 	return (
-		<ProductRowWrapper $selected={selected}>
+		<ProductRowWrapper
+			$selected={selected}
+			$clickable={Boolean(onSelectChange)}
+			onClick={onSelectChange}
+		>
 			<ProductInfo>
-				<Checkbox checked={selected} readOnly />
+				<span onClick={(e) => e.stopPropagation()}>
+					<Checkbox
+						checked={selected}
+						onChange={() => onSelectChange?.()}
+						aria-label={`Выбрать ${product.title}`}
+					/>
+				</span>
 				{product.thumbnail ? (
 					<ProductImage src={product.thumbnail} alt={product.title} />
 				) : (
@@ -58,7 +73,7 @@ export function ProductRow({ product, selected = false }: ProductRowProps) {
 					{price.int}
 					<span className="decimals">{price.dec}</span>
 				</PriceCell>
-				<RowActions>
+				<RowActions onClick={(e) => e.stopPropagation()}>
 					<AddIconButton type="button" aria-label="Добавить">
 						<PlusIcon size={24} color="white" />
 					</AddIconButton>
