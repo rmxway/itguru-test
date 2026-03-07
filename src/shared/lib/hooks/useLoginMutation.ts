@@ -23,16 +23,9 @@ export function useLoginMutation() {
 			);
 
 			try {
-				const result = await loginApi(
-					username,
-					password,
-					controller.signal,
-				);
+				return await loginApi(username, password, controller.signal);
+			} finally {
 				clearTimeout(timeoutId);
-				return result;
-			} catch (err) {
-				clearTimeout(timeoutId);
-				throw err;
 			}
 		},
 		onSuccess: (data, variables) => {

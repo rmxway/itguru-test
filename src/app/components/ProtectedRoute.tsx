@@ -1,7 +1,14 @@
-import { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { useQuery } from '@tanstack/react-query';
 import { Navigate } from 'react-router-dom';
 import { fetchAuthMe } from '@shared/api/auth';
 import { getUser, removeUser } from '@shared/lib/storage';
+import { Preloader } from '@shared/ui/Preloader';
+
+const PreloaderWrapper = styled.div`
+	position: relative;
+	min-height: 100vh;
+`;
 
 interface ProtectedRouteProps {
 	children: React.ReactNode;
@@ -9,46 +16,31 @@ interface ProtectedRouteProps {
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
 	const user = getUser();
-	const [state, setState] = useState(() => ({
-		isValidating: !!user,
-		isAuthorized: false,
-	}));
 
-	useEffect(() => {
-		if (!user) return;
-
-		let cancelled = false;
-		fetchAuthMe()
-			.then((meUser) => {
-				if (cancelled) return;
-				if (!meUser) {
-					removeUser();
-				}
-				setState({ isValidating: false, isAuthorized: !!meUser });
-			})
-			.catch(() => {
-				if (cancelled) return;
-				removeUser();
-				setState({ isValidating: false, isAuthorized: false });
-			});
-
-		return () => {
-			cancelled = true;
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount when user exists
-	}, []);
+	const { data: meUser, isLoading } = useQuery({
+		queryKey: ['auth', 'me'],
+		queryFn: fetchAuthMe,
+		enabled: !!user,
+		staleTime: 5 * 60 * 1000,
+		retry: false,
+	});
 
 	if (!user) {
 		return <Navigate to="/login" replace />;
 	}
 
-	if (state.isValidating) {
-		return null;
+	if (isLoading) {
+		return (
+			<PreloaderWrapper>
+				<Preloader />
+			</PreloaderWrapper>
+		);
 	}
 
-	return state.isAuthorized ? (
-		<>{children}</>
-	) : (
-		<Navigate to="/login" replace />
-	);
+	if (!meUser) {
+		removeUser();
+		return <Navigate to="/login" replace />;
+	}
+
+	return <>{children}</>;
 }

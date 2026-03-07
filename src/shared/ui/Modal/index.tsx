@@ -36,20 +36,19 @@ export function Modal({ isOpen, onClose, children, size }: ModalProps) {
 		if (isOpen) {
 			document.addEventListener('keydown', handleEscape);
 			lockScroll();
+			return () => {
+				document.removeEventListener('keydown', handleEscape);
+				unlockScroll();
+			};
 		}
-		return () => {
-			document.removeEventListener('keydown', handleEscape);
-		};
 	}, [isOpen, handleEscape]);
-
-	useEffect(() => () => unlockScroll(), []);
 
 	const handleBackdropClick = (e: React.MouseEvent) => {
 		if (e.target === e.currentTarget) handleClose();
 	};
 
 	return createPortal(
-		<AnimatePresence onExitComplete={unlockScroll}>
+		<AnimatePresence>
 			{isOpen && (
 				<Backdrop
 					variants={backdropVariants}

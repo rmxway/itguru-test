@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { queryClient } from '@app/providers/queryClient';
 import { useProductsQuery } from '@shared/lib/hooks';
@@ -84,12 +84,18 @@ export function ProductsTable({
 		order: sortOrder,
 	});
 
-	const allCurrentPageSelected =
-		products.length > 0 && products.every((p) => selectedIds.has(p.id));
+	const currentPageIds = useMemo(
+		() => new Set(products.map((p) => p.id)),
+		[products],
+	);
+
+	const allCurrentPageSelected = useMemo(
+		() =>
+			products.length > 0 && products.every((p) => selectedIds.has(p.id)),
+		[products, selectedIds],
+	);
 
 	const handleToggleSelectAll = useCallback(() => {
-		const currentPageIds = new Set(products.map((p) => p.id));
-
 		setSelectedIds((prev) => {
 			const allSelected =
 				currentPageIds.size > 0 &&
@@ -102,7 +108,7 @@ export function ProductsTable({
 			}
 			return next;
 		});
-	}, [products]);
+	}, [currentPageIds]);
 
 	const handleAddProduct = (data: AddProductFormData) => {
 		const newProduct: Product = {
@@ -279,9 +285,7 @@ export function ProductsTable({
 										key={product.id}
 										product={product}
 										selected={selectedIds.has(product.id)}
-										onSelectChange={() =>
-											handleToggleSelect(product.id)
-										}
+										onSelectChange={handleToggleSelect}
 									/>
 								))}
 							</ProductRows>

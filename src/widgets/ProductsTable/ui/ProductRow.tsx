@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import type { Product } from '@shared/api/products';
 import { Checkbox } from '@shared/ui';
 import { PlusIcon, DotsIcon } from '@shared/assets/icons';
@@ -23,7 +23,7 @@ import {
 interface ProductRowProps {
 	product: Product;
 	selected?: boolean;
-	onSelectChange?: () => void;
+	onSelectChange?: (id: number | string) => void;
 }
 
 function formatPrice(price: number): { int: string; dec: string } {
@@ -53,58 +53,66 @@ function ProductImageWithPlaceholder({
 	);
 }
 
-export function ProductRow({
-	product,
-	selected = false,
-	onSelectChange,
-}: ProductRowProps) {
-	const sku = product.sku ?? `SKU-${product.id}`;
-	const ratingLow = product.rating < 4;
-	const price = formatPrice(product.price);
+export const ProductRow = memo(
+	function ProductRow({
+		product,
+		selected = false,
+		onSelectChange,
+	}: ProductRowProps) {
+		const sku = product.sku ?? `SKU-${product.id}`;
+		const ratingLow = product.rating < 4;
+		const price = formatPrice(product.price);
 
-	return (
-		<ProductRowWrapper
-			$selected={selected}
-			$clickable={Boolean(onSelectChange)}
-			onClick={onSelectChange}
-		>
-			<ProductInfo>
-				<span onClick={(e) => e.stopPropagation()}>
-					<Checkbox
-						checked={selected}
-						onChange={() => onSelectChange?.()}
-						aria-label={`Выбрать ${product.title}`}
+		const handleClick = () => onSelectChange?.(product.id);
+
+		return (
+			<ProductRowWrapper
+				$selected={selected}
+				$clickable={Boolean(onSelectChange)}
+				onClick={handleClick}
+			>
+				<ProductInfo>
+					<span onClick={(e) => e.stopPropagation()}>
+						<Checkbox
+							checked={selected}
+							onChange={handleClick}
+							aria-label={`Выбрать ${product.title}`}
+						/>
+					</span>
+					<ProductImageWithPlaceholder
+						key={product.thumbnail}
+						src={product.thumbnail}
+						alt={product.title}
 					/>
-				</span>
-				<ProductImageWithPlaceholder
-					key={product.thumbnail}
-					src={product.thumbnail}
-					alt={product.title}
-				/>
-				<ProductNameBlock>
-					<ProductName>{product.title}</ProductName>
-					<ProductCategory>{product.category}</ProductCategory>
-				</ProductNameBlock>
-			</ProductInfo>
-			<ProductDetails>
-				<DetailCell $bold>{product.brand || '–'}</DetailCell>
-				<DetailCell>{sku}</DetailCell>
-				<RatingCell $low={ratingLow}>
-					{product.rating.toFixed(1)}/5
-				</RatingCell>
-				<PriceCell>
-					{price.int}
-					<span className="decimals">{price.dec}</span>
-				</PriceCell>
-				<RowActions onClick={(e) => e.stopPropagation()}>
-					<AddIconButton type="button" aria-label="Добавить">
-						<PlusIcon size={24} color="white" />
-					</AddIconButton>
-					<MenuButton type="button" aria-label="Меню">
-						<DotsIcon size={24} color="text.secondary" />
-					</MenuButton>
-				</RowActions>
-			</ProductDetails>
-		</ProductRowWrapper>
-	);
-}
+					<ProductNameBlock>
+						<ProductName>{product.title}</ProductName>
+						<ProductCategory>{product.category}</ProductCategory>
+					</ProductNameBlock>
+				</ProductInfo>
+				<ProductDetails>
+					<DetailCell $bold>{product.brand || '–'}</DetailCell>
+					<DetailCell>{sku}</DetailCell>
+					<RatingCell $low={ratingLow}>
+						{product.rating.toFixed(1)}/5
+					</RatingCell>
+					<PriceCell>
+						{price.int}
+						<span className="decimals">{price.dec}</span>
+					</PriceCell>
+					<RowActions onClick={(e) => e.stopPropagation()}>
+						<AddIconButton type="button" aria-label="Добавить">
+							<PlusIcon size={24} color="white" />
+						</AddIconButton>
+						<MenuButton type="button" aria-label="Меню">
+							<DotsIcon size={24} color="text.secondary" />
+						</MenuButton>
+					</RowActions>
+				</ProductDetails>
+			</ProductRowWrapper>
+		);
+	},
+	(prevProps, nextProps) =>
+		prevProps.product.id === nextProps.product.id &&
+		prevProps.selected === nextProps.selected &&
+		prevProps.onSelectChange === nextProps.onSelectChange,
+);

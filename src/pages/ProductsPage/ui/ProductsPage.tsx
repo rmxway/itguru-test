@@ -1,4 +1,7 @@
-import { useAuth, usePagination, useSearch, useSort } from '@shared/lib/hooks';
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { usePagination, useSearch, useSort } from '@shared/lib/hooks';
+import { getUser, removeUser } from '@shared/lib/storage';
 import {
 	Page,
 	Header,
@@ -14,7 +17,14 @@ import { SearchIcon, CloseIcon } from '@shared/assets/icons';
 import { ProductsTable } from '@widgets/ProductsTable';
 
 export function ProductsPage() {
-	const { user, handleLogout } = useAuth();
+	const user = getUser();
+	const navigate = useNavigate();
+
+	const handleLogout = useCallback(() => {
+		removeUser();
+		navigate('/login', { replace: true, state: { fromLogout: true } });
+	}, [navigate]);
+
 	const { page, handlePageChange, resetToFirstPage } = usePagination({
 		enabled: !!user,
 	});

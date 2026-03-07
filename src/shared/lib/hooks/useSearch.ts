@@ -12,6 +12,7 @@ export function useSearch({ onSearch }: UseSearchProps) {
 		null,
 	);
 	const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const isMountedRef = useRef(true);
 
 	const applySearch = useCallback(
 		(query: string) => {
@@ -33,7 +34,9 @@ export function useSearch({ onSearch }: UseSearchProps) {
 
 			debounceRef.current = setTimeout(() => {
 				debounceRef.current = null;
-				applySearch(value);
+				if (isMountedRef.current) {
+					applySearch(value);
+				}
 			}, SEARCH_DEBOUNCE_MS);
 		},
 		[applySearch],
@@ -46,7 +49,9 @@ export function useSearch({ onSearch }: UseSearchProps) {
 					clearTimeout(debounceRef.current);
 					debounceRef.current = null;
 				}
-				applySearch(searchQuery);
+				if (isMountedRef.current) {
+					applySearch(searchQuery);
+				}
 			}
 		},
 		[applySearch, searchQuery],
@@ -62,14 +67,15 @@ export function useSearch({ onSearch }: UseSearchProps) {
 		onSearch(null);
 	}, [onSearch]);
 
-	useEffect(
-		() => () => {
+	useEffect(() => {
+		isMountedRef.current = true;
+		return () => {
+			isMountedRef.current = false;
 			if (debounceRef.current) {
 				clearTimeout(debounceRef.current);
 			}
-		},
-		[],
-	);
+		};
+	}, []);
 
 	return {
 		searchQuery,

@@ -6,8 +6,12 @@ import { QueryProvider } from '@app/providers/QueryProvider';
 import { ThemeProvider } from '@app/providers/ThemeProvider';
 import { setupCSPReporter } from '@shared/lib/security/cspReporter';
 import { setupErrorBoundary } from '@shared/lib/logging/errorLogger';
+import { initCsrfToken } from '@shared/lib/security/initCsrf';
+import { initSpaRedirect } from '@shared/lib/utils';
 import App from './App.tsx';
 
+initCsrfToken();
+initSpaRedirect();
 setupCSPReporter();
 setupErrorBoundary();
 
