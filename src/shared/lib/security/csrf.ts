@@ -1,3 +1,5 @@
+import { getAccessToken } from '@shared/lib/storage';
+
 const CSRF_META_NAME = 'csrf-token';
 
 export function getCSRFToken(): string | null {
@@ -7,9 +9,13 @@ export function getCSRFToken(): string | null {
 
 export function getAuthHeaders(): Record<string, string> {
 	const headers: Record<string, string> = {};
-	const token = getCSRFToken();
-	if (token) {
-		headers['X-CSRF-Token'] = token;
+	const csrfToken = getCSRFToken();
+	if (csrfToken) {
+		headers['X-CSRF-Token'] = csrfToken;
+	}
+	const accessToken = getAccessToken();
+	if (accessToken) {
+		headers['Authorization'] = `Bearer ${accessToken}`;
 	}
 	return headers;
 }
