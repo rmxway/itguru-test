@@ -34,21 +34,6 @@ export function saveUser(
 	otherStorage.removeItem(REFRESH_TOKEN_KEY);
 }
 
-export function saveTokens(
-	accessToken: string,
-	refreshToken: string,
-	rememberMe: boolean,
-): void {
-	const storage = getStorage(rememberMe);
-	const otherStorage = rememberMe ? sessionStorage : localStorage;
-
-	storage.setItem(ACCESS_TOKEN_KEY, accessToken);
-	storage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-
-	otherStorage.removeItem(ACCESS_TOKEN_KEY);
-	otherStorage.removeItem(REFRESH_TOKEN_KEY);
-}
-
 function getStorageWithRefreshToken(): AuthStorage | null {
 	if (localStorage.getItem(REFRESH_TOKEN_KEY)) return localStorage;
 	if (sessionStorage.getItem(REFRESH_TOKEN_KEY)) return sessionStorage;

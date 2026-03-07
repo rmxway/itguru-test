@@ -94,7 +94,15 @@ export async function fetchWithAuth(
 	if (response.status === 401) {
 		const refreshed = await tryRefresh();
 		if (refreshed) {
-			response = await fetch(input, mergedInit);
+			const retryInit: FetchInit = {
+				...init,
+				credentials: 'omit',
+				headers: {
+					...getAuthHeaders(),
+					...(init.headers as Record<string, string>),
+				},
+			};
+			response = await fetch(input, retryInit);
 		}
 	}
 
