@@ -51,9 +51,9 @@ src/
 
 **Авторизация:**
 
-- `POST /auth/login` — вход (токены в cookies, 30 мин)
-- `GET /auth/me` — проверка сессии
-- `POST /auth/refresh` — обновление токена
+- `POST /auth/login` — вход (accessToken, refreshToken в теле ответа)
+- `GET /auth/me` — проверка сессии (заголовок `Authorization: Bearer`)
+- `POST /auth/refresh` — обновление токена (refreshToken в теле запроса)
 
 **Товары:**
 
@@ -157,12 +157,14 @@ yarn format       # prettier
 
 **Состояние:**
 
-- Cookies — токены (HttpOnly, 30 мин)
-- LocalStorage/SessionStorage — данные пользователя и настройки
+- LocalStorage/SessionStorage — токены (accessToken, refreshToken) и данные пользователя
+- Передача токена в заголовке `Authorization: Bearer`
+- Опция «Запомнить меня» — localStorage (постоянно) или sessionStorage (до закрытия вкладки)
 
 ## 📝 Примечания
 
 - Используется Dummy JSON API — добавление товаров симулируется (не сохраняется на сервере)
-- Токены обновляются автоматически
+- Токены хранятся в localStorage/sessionStorage (без cookies) — работает на production (GitHub Pages) без CORS
+- Refresh token при 401 — автоматическое обновление сессии
 - Yarn Berry (v4) с Plug'n'Play
 

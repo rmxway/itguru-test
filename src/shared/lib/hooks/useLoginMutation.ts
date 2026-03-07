@@ -38,6 +38,8 @@ export function useLoginMutation() {
 					firstName: data.firstName,
 					lastName: data.lastName,
 				},
+				data.accessToken,
+				data.refreshToken,
 				rememberMe,
 			);
 		},

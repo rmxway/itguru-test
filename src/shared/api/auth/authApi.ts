@@ -32,7 +32,7 @@ export async function login(
 			...getAuthHeaders(),
 		},
 		body: JSON.stringify(body),
-		credentials: 'include',
+		credentials: 'omit',
 		signal,
 	});
 
