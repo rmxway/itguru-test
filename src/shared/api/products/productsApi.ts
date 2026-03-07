@@ -1,5 +1,7 @@
 import { API_BASE_URL, API_ENDPOINTS } from '../config';
 import { PRODUCTS_PER_PAGE } from '@shared/constants';
+import { fetchWithAuth } from '../interceptors/refreshTokenInterceptor';
+import { ServerError } from '../errors/ApiError';
 import type { ProductsResponse } from './types';
 import type { SortField, SortOrder } from '@shared/lib/storage';
 
@@ -28,13 +30,17 @@ export async function fetchProducts(
 
 	const url = `${API_BASE_URL}${API_ENDPOINTS.products}?${searchParams.toString()}`;
 
-	const response = await fetch(url, { signal });
+	const response = await fetchWithAuth(url, { signal });
 
 	if (!response.ok) {
-		throw new Error('Ошибка при загрузке товаров');
+		throw new ServerError('Ошибка при загрузке товаров', response.status);
 	}
 
-	return response.json() as Promise<ProductsResponse>;
+	try {
+		return (await response.json()) as ProductsResponse;
+	} catch {
+		throw new ServerError('Некорректный ответ сервера', response.status);
+	}
 }
 
 export async function searchProducts(
@@ -52,11 +58,15 @@ export async function searchProducts(
 
 	const url = `${API_BASE_URL}${API_ENDPOINTS.products}/search?${searchParams.toString()}`;
 
-	const response = await fetch(url, { signal });
+	const response = await fetchWithAuth(url, { signal });
 
 	if (!response.ok) {
-		throw new Error('Ошибка при поиске товаров');
+		throw new ServerError('Ошибка при поиске товаров', response.status);
 	}
 
-	return response.json() as Promise<ProductsResponse>;
+	try {
+		return (await response.json()) as ProductsResponse;
+	} catch {
+		throw new ServerError('Некорректный ответ сервера', response.status);
+	}
 }

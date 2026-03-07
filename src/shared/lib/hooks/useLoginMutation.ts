@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { login as loginApi, AuthApiError } from '@shared/api/auth';
 import { LOGIN_TIMEOUT_MS } from '@shared/constants';
-import { saveToken, saveUser } from '@shared/lib/storage';
+import { saveUser } from '@shared/lib/storage';
 
 const NETWORK_ERROR_MESSAGE = 'Нет подключения к сети';
 const TIMEOUT_ERROR_MESSAGE = `Превышено время ожидания (${LOGIN_TIMEOUT_MS / 1000} секунд)`;
@@ -37,7 +37,6 @@ export function useLoginMutation() {
 		},
 		onSuccess: (data, variables) => {
 			const { rememberMe } = variables;
-			saveToken(data.accessToken, data.refreshToken, rememberMe);
 			saveUser(
 				{
 					id: data.id,

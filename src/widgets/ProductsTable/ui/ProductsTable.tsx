@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { queryClient } from '@app/providers/queryClient';
 import { useProductsQuery } from '@shared/lib/hooks';
 import { RefreshIcon, PlusCircleIcon, SortIcon } from '@shared/assets/icons';
@@ -50,9 +51,11 @@ export function ProductsTable({
 	onSortChange,
 }: ProductsTableProps) {
 	const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-	const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+	const [selectedIds, setSelectedIds] = useState<Set<number | string>>(
+		new Set(),
+	);
 
-	const handleToggleSelect = useCallback((id: number) => {
+	const handleToggleSelect = useCallback((id: number | string) => {
 		setSelectedIds((prev) => {
 			const next = new Set(prev);
 			if (next.has(id)) {
@@ -103,7 +106,7 @@ export function ProductsTable({
 
 	const handleAddProduct = (data: AddProductFormData) => {
 		const newProduct: Product = {
-			id: -Date.now(),
+			id: `temp-${uuidv4()}`,
 			title: data.title,
 			brand: data.brand,
 			price: data.price,

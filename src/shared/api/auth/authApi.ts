@@ -1,4 +1,5 @@
 import { API_BASE_URL, API_ENDPOINTS } from '../config';
+import { getAuthHeaders } from '@shared/lib/security/csrf';
 import type { LoginRequest, LoginResponse } from './types';
 
 const AUTH_ERROR_MESSAGES: Record<number, string> = {
@@ -22,14 +23,16 @@ export async function login(
 	password: string,
 	signal?: AbortSignal,
 ): Promise<LoginResponse> {
-	const body: LoginRequest = { username, password };
+	const body: LoginRequest = { username, password, expiresInMins: 30 };
 
 	const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.auth.login}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
+			...getAuthHeaders(),
 		},
 		body: JSON.stringify(body),
+		credentials: 'include',
 		signal,
 	});
 
@@ -39,19 +42,21 @@ export async function login(
 				response.status as keyof typeof AUTH_ERROR_MESSAGES
 			] ?? 'Произошла ошибка при авторизации';
 
+		let errorMessage = message;
 		try {
 			const errorData = (await response.json()) as { message?: string };
-			throw new AuthApiError(
-				errorData.message ?? message,
-				response.status,
-			);
-		} catch (err) {
-			if (err instanceof AuthApiError) {
-				throw err;
+			if (typeof errorData?.message === 'string') {
+				errorMessage = errorData.message;
 			}
-			throw new AuthApiError(message, response.status);
+		} catch {
+			// Невалидный JSON в ответе - используем дефолтное сообщение
 		}
+		throw new AuthApiError(errorMessage, response.status);
 	}
 
-	return response.json() as Promise<LoginResponse>;
+	try {
+		return (await response.json()) as LoginResponse;
+	} catch {
+		throw new AuthApiError('Некорректный ответ сервера', 0);
+	}
 }

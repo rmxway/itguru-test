@@ -44,7 +44,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 						ref={ref}
 						id={inputId}
 						autoComplete="off"
-						autoCapitalize='off'
+						autoCapitalize="off"
 						aria-invalid={Boolean(error)}
 						aria-describedby={
 							error ? `${inputId}-error` : undefined

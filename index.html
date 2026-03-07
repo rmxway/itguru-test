@@ -14,6 +14,24 @@
 			rel="stylesheet"
 		/>
 		<title>AitiGuru Test</title>
+		<meta
+			http-equiv="Content-Security-Policy"
+			content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://dummyjson.com https://cdn.dummyjson.com; connect-src 'self' https://dummyjson.com;"
+		/>
+		<meta name="csrf-token" content="" />
+		<script type="text/javascript">
+			(function () {
+				const meta = document.querySelector('meta[name="csrf-token"]');
+				if (meta) {
+					meta.setAttribute(
+						'content',
+						Array.from(crypto.getRandomValues(new Uint8Array(32)))
+							.map((b) => b.toString(16).padStart(2, '0'))
+							.join(''),
+					);
+				}
+			})();
+		</script>
 		<script type="text/javascript">
 			// Single Page Apps for GitHub Pages
 			// MIT License

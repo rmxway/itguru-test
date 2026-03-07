@@ -1,3 +1,5 @@
+export const API_REMOTE_URL = 'https://dummyjson.com';
+
 export const PRODUCTS_PER_PAGE = 5;
 export const MAX_VISIBLE_PAGES = 5;
 export const LOGIN_TIMEOUT_MS = 20000;
