@@ -120,13 +120,6 @@ yarn format       # prettier
 
 Автоматический деплой на **GitHub Pages** через GitHub Actions при пуше в `master`.
 
-**Настройка:**
-
-1. Settings → Pages → Build and deployment → **GitHub Actions**
-2. После пуша: `https://<username>.github.io/<repo-name>/`
-
-**Ручной запуск:** Actions → Deploy to GitHub Pages → Run workflow
-
 ## 🎯 Ключевые особенности
 
 **Архитектура:**
@@ -137,8 +130,8 @@ yarn format       # prettier
 
 **UX/UI:**
 
-- Адаптивный дизайн (mobile-first)
-- Анимации (Framer Motion)
+- Адаптивный дизайн
+- Анимации
 - Toast-уведомления
 - Модальные окна (блокировка скролла, ESC, backdrop click)
 
