@@ -39,7 +39,7 @@ export function AddProductForm({ onSubmit, onCancel }: AddProductFormProps) {
 					{...register('title')}
 				/>
 				<Input
-					label="Цена, ₽"
+					label="Цена, $"
 					type="number"
 					placeholder="Введите цену"
 					error={errors.price?.message}
