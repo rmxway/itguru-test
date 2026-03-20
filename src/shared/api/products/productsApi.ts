@@ -1,15 +1,7 @@
-import { API_BASE_URL, API_ENDPOINTS } from '../config';
+import { API_ENDPOINTS } from '../config';
 import { PRODUCTS_PER_PAGE } from '@shared/constants';
-import { fetchWithAuth } from '../interceptors/refreshTokenInterceptor';
-import { ServerError } from '../errors/ApiError';
-import type { ProductsResponse } from './types';
-import type { SortField, SortOrder } from '@shared/lib/storage';
-
-export interface FetchProductsParams {
-	page?: number;
-	sortBy?: SortField | null;
-	order?: SortOrder | null;
-}
+import { api } from '../httpClient';
+import type { FetchProductsParams, ProductsResponse } from '@shared/types';
 
 export async function fetchProducts(
 	params: FetchProductsParams = {},
@@ -18,29 +10,21 @@ export async function fetchProducts(
 	const { page = 1, sortBy, order } = params;
 	const skip = (page - 1) * PRODUCTS_PER_PAGE;
 
-	const searchParams = new URLSearchParams({
-		limit: String(PRODUCTS_PER_PAGE),
-		skip: String(skip),
-	});
+	const query: Record<string, string | number> = {
+		limit: PRODUCTS_PER_PAGE,
+		skip,
+	};
 
 	if (sortBy && order) {
-		searchParams.set('sortBy', sortBy);
-		searchParams.set('order', order);
+		query.sortBy = sortBy;
+		query.order = order;
 	}
 
-	const url = `${API_BASE_URL}${API_ENDPOINTS.products}?${searchParams.toString()}`;
-
-	const response = await fetchWithAuth(url, { signal });
-
-	if (!response.ok) {
-		throw new ServerError('Ошибка при загрузке товаров', response.status);
-	}
-
-	try {
-		return (await response.json()) as ProductsResponse;
-	} catch {
-		throw new ServerError('Некорректный ответ сервера', response.status);
-	}
+	const { data } = await api.get<ProductsResponse>(API_ENDPOINTS.products, {
+		params: query,
+		signal,
+	});
+	return data;
 }
 
 export async function searchProducts(
@@ -50,23 +34,16 @@ export async function searchProducts(
 ): Promise<ProductsResponse> {
 	const skip = (page - 1) * PRODUCTS_PER_PAGE;
 
-	const searchParams = new URLSearchParams({
-		q: query,
-		limit: String(PRODUCTS_PER_PAGE),
-		skip: String(skip),
-	});
-
-	const url = `${API_BASE_URL}${API_ENDPOINTS.products}/search?${searchParams.toString()}`;
-
-	const response = await fetchWithAuth(url, { signal });
-
-	if (!response.ok) {
-		throw new ServerError('Ошибка при поиске товаров', response.status);
-	}
-
-	try {
-		return (await response.json()) as ProductsResponse;
-	} catch {
-		throw new ServerError('Некорректный ответ сервера', response.status);
-	}
+	const { data } = await api.get<ProductsResponse>(
+		`${API_ENDPOINTS.products}/search`,
+		{
+			params: {
+				q: query,
+				limit: PRODUCTS_PER_PAGE,
+				skip,
+			},
+			signal,
+		},
+	);
+	return data;
 }

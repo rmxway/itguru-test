@@ -3,12 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { useForm, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '../model/schema';
-import type { LoginFormData } from '../model/schema';
+import type { LoginFormData } from '@shared/types';
 import { Input } from '@shared/ui/Input';
 import { Button } from '@shared/ui/Button';
 import { Checkbox } from '@shared/ui/Checkbox';
 import { ErrorMessage } from '@shared/ui/ErrorMessage';
-import { useLoginMutation, getLoginErrorMessage } from '@shared/lib/hooks';
+import { AuthApiError } from '@shared/api/auth';
+import { logError } from '@shared/lib/logging/errorLogger';
+import { getLoginErrorMessage } from '@shared/lib/errors/getErrorMessage';
+import { useLoginMutation } from '@shared/lib/hooks';
 import {
 	UserIcon,
 	LockIcon,
@@ -74,8 +77,10 @@ export function LoginForm() {
 				rememberMe: data.rememberMe,
 			});
 			navigate('/products', { replace: true });
-		} catch {
-			// Error handled by mutation state
+		} catch (e) {
+			if (!(e instanceof AuthApiError)) {
+				logError(e, { context: 'loginSubmit' });
+			}
 		}
 	};
 

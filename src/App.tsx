@@ -1,7 +1,14 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import styled from 'styled-components';
 import { ProtectedRoute } from '@app/components/ProtectedRoute';
 import { ErrorBoundary } from '@app/components/ErrorBoundary';
+import { Preloader } from '@shared/ui/Preloader';
+
+const SuspenseFallbackLayout = styled.div`
+	min-height: 100vh;
+	position: relative;
+`;
 
 const LoginPage = lazy(() =>
 	import('@pages/LoginPage').then((m) => ({ default: m.LoginPage })),
@@ -13,7 +20,13 @@ const ProductsPage = lazy(() =>
 function App() {
 	return (
 		<ErrorBoundary>
-			<Suspense fallback={null}>
+			<Suspense
+				fallback={
+					<SuspenseFallbackLayout>
+						<Preloader />
+					</SuspenseFallbackLayout>
+				}
+			>
 				<Routes>
 					<Route path="/login" element={<LoginPage />} />
 					<Route

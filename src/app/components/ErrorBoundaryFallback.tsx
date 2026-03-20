@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Button } from '@shared/ui/Button';
 
 const Wrapper = styled.div`
 	padding: 2rem;
@@ -16,7 +17,7 @@ const Title = styled.h2`
 const Text = styled.p`
 	font-size: ${({ theme }) => theme.fontSizes.sm};
 	color: ${({ theme }) => theme.colors.text.secondary};
-	margin: 0;
+	margin: 0 0 1rem;
 `;
 
 export function ErrorBoundaryFallback() {
@@ -24,6 +25,9 @@ export function ErrorBoundaryFallback() {
 		<Wrapper>
 			<Title>Произошла ошибка</Title>
 			<Text>Попробуйте обновить страницу</Text>
+			<Button type="button" onClick={() => window.location.reload()}>
+				Обновить страницу
+			</Button>
 		</Wrapper>
 	);
 }

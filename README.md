@@ -1,203 +1,62 @@
-# 📦 Products Table
+# Products Table
 
-React-приложение для управления каталогом товаров с авторизацией, поиском, сортировкой и возможностью добавления новых товаров.
+Тестовое React-приложение: авторизация, таблица товаров (DummyJSON), поиск, сортировка, локальное добавление строк.
 
+## Возможности
 
+Авторизация, пагинация, поиск, сортировка колонок, оптимистичное добавление товара в кэш React Query, адаптивная вёрстка.
 
-## ✨ Возможности
+## Стек
 
-🔐 Авторизация • 📋 Таблица с пагинацией • 🔍 Поиск • ⬆️⬇️ Сортировка • ➕ Добавление товаров • 📱 Адаптивный дизайн
+React 19, TypeScript, Vite 7, **axios** (интерцепторы refresh при 401), TanStack Query, React Hook Form, Yup, styled-components, React Router, react-hot-toast.
 
-
-
-## 🚀 Стек
-
-**React 19** • **TypeScript** • **Vite 7** • **React Query** • **React Hook Form** • **Yup** • **Styled Components** • **React Router** • **Framer Motion**
-
-
-
-## 📁 Структура проекта
-
-Архитектура **Feature-Sliced Design (FSD)**:
+## Структура `src/`
 
 ```
 src/
-├── app/                   # Инициализация, провайдеры, глобальные стили
-│   ├── components/        # ErrorBoundary, ProtectedRoute
-│   ├── providers/         # QueryProvider, ThemeProvider
-│   └── styles/            # GlobalStyles, theme, media
-├── pages/                 # Страницы-роуты
-│   ├── LoginPage/         # Авторизация
-│   └── ProductsPage/      # Список товаров
-├── widgets/               # Композитные блоки
-│   ├── LoginForm/         # Форма входа + валидация
-│   ├── ProductsTable/     # Таблица + пагинация + сортировка
-│   └── AddProductForm/    # Форма добавления товара
-└── shared/                # Переиспользуемый код
-    ├── api/               # HTTP-клиенты (auth, products), interceptors
-    ├── assets/            # SVG-иконки
-    ├── constants/         # Константы
-    ├── layouts/           # Container, Flex, Grid
-    ├── lib/               
-    │   ├── hooks/         # usePagination, useSort, useSearch, useProductsQuery
-    │   ├── security/      # CSRF, CSP reporter
-    │   ├── storage/       # authStorage, sortStorage
-    │   └── utils/         # scrollLock, spaRedirect
-    ├── types/             # TypeScript типы
-    └── ui/                # Button, Input, Modal, Checkbox, Preloader
+├── app/              # провайдеры, ErrorBoundary, ProtectedRoute, тема
+├── pages/            # LoginPage, ProductsPage (index.tsx + styled.ts)
+├── widgets/          # LoginForm, ProductsTable, AddProductForm
+└── shared/
+    ├── api/          # config, httpClient (api + publicApi), auth, products
+    ├── types/        # domain.ts + UI-типы (единая точка DTO и форм)
+    ├── lib/          # hooks, storage, errors (getErrorMessage), logging, utils
+    └── ui/           # Button, Input, Modal, …
 ```
 
+## Переменные окружения
 
+- `VITE_BASE_PATH` — базовый путь для деплоя (по умолчанию `/`). Используется в Vite `base` и в `BrowserRouter`.
 
-## 🔌 API
+Базовый URL API: в dev прокси Vite `/api` → `API_REMOTE_URL` из [`src/shared/constants`](src/shared/constants/index.ts); в production — прямой запрос на тот же URL.
 
-Используется [Dummy JSON](https://dummyjson.com/) — fake REST API для тестирования.
+## API (DummyJSON)
 
-Для корректной работы API следует использовать VPN.
+Нужен доступ к [dummyjson.com](https://dummyjson.com/) (при блокировке — VPN).
 
+Эндпоинты: `POST /auth/login`, `GET /auth/me`, `POST /auth/refresh`, `GET /products`, `GET /products/search`.
 
+Тестовый пользователь (пример из документации DummyJSON): **emilys** / **emilyspass**.
 
-### Эндпоинты
-
-**Авторизация:**
-
-- `POST /auth/login` — вход (accessToken, refreshToken в теле ответа)
-- `GET /auth/me` — проверка сессии (заголовок `Authorization: Bearer`)
-- `POST /auth/refresh` — обновление токена (refreshToken в теле запроса)
-
-
-
-Для входа в приложение, используйте готовые аккаунты от Dummy JSON.
-
-**login:** emilys
-
-**password:** emilyspass
-
-
-
-**Товары:**
-
-- `GET /products?limit=10&skip=0` — список с пагинацией
-- `GET /products/search?q={query}` — поиск
-- `POST /products/add` — добавление (симуляция)
-
-
-
-### Сортировка
-
-Клиентская сортировка по полям:
-
-- **Наименование** (title) — по алфавиту A-Z / Z-A
-- **Цена** (price) — по возрастанию / убыванию
-- **Рейтинг** (rating) — по возрастанию / убыванию
-
-Выбранная сортировка автоматически сохраняется в `localStorage` и восстанавливается при следующем визите.
-
-
-
-### Поиск
-
-- **Серверный поиск** через `/products/search?q={query}`
-- Поиск работает по наименованию товара
-- Результаты поиска можно сбросить кнопкой очистки
-- При активном поиске отображается количество найденных товаров
-
-
-
-### Добавление товара
-
-Модальная форма с валидацией (React Hook Form + Yup):
-
-- **Наименование** — обязательное, минимум 3 символа
-- **Цена** — обязательное, положительное число
-- **Вендор** — обязательное, минимум 2 символа
-- **Артикул** — обязательное, минимум 3 символа
-
-После успешного добавления:
-
-- Отображается toast-уведомление
-- Список товаров автоматически обновляется
-- Форма закрывается
-
-> ⚠️ **Важно:** API симулирует добавление — товар не сохраняется на сервере, но отображается в таблице локально.
-
-
-
-## ⚙️ Быстрый старт
+## Скрипты (Yarn)
 
 ```bash
-# Установка
 yarn install
-
-# Разработка
 yarn dev          # http://localhost:5173
-
-# Production
 yarn build
 yarn preview
-
-# Линтинг
-yarn lint         # проверка
-yarn lint:fix     # автофикс
-yarn format       # prettier
+yarn lint
+yarn lint:fix
+yarn format
 ```
 
+## Деплой
 
+При необходимости — GitHub Pages и `VITE_BASE_PATH` под подкаталог репозитория.
 
-## 🌐 Деплой
+## Поведение
 
-Автоматический деплой на **GitHub Pages** через GitHub Actions при пуше в `master`.
-
-
-
-## 🎯 Ключевые особенности
-
-**Архитектура:**
-
-- Feature-Sliced Design — модульная структура
-- Кастомные хуки для бизнес-логики
-- Композиция UI-компонентов
-
-
-
-**UX/UI:**
-
-- Адаптивный дизайн
-- Анимации
-- Toast-уведомления
-- Модальные окна (блокировка скролла, ESC, backdrop click)
-
-
-
-**Производительность:**
-
-- React Query — кэширование и автообновление
-- Мемоизация колбэков
-- Lazy loading изображений
-
-
-
-**Безопасность:**
-
-- CSRF защита
-- CSP reporter
-- ErrorBoundary
-- Автообновление токенов
-
-
-
-**Состояние:**
-
-- LocalStorage/SessionStorage — токены (accessToken, refreshToken) и данные пользователя
-- Передача токена в заголовке `Authorization: Bearer`
-- Опция «Запомнить меня» — localStorage (постоянно) или sessionStorage (до закрытия вкладки)
-
-
-
-## 📝 Примечания
-
-- Используется Dummy JSON API — добавление товаров симулируется (не сохраняется на сервере)
-- Токены хранятся в localStorage/sessionStorage (без cookies) — работает на production (GitHub Pages) без CORS
-- Refresh token при 401 — автоматическое обновление сессии
-- Yarn Berry (v4) с Plug'n'Play
-
+- Токены в `localStorage` / `sessionStorage`, заголовок `Authorization: Bearer`.
+- При 401 запросы с `api` проходят через обновление refresh-токена (`publicApi`); при неудаче — редирект на `/login`.
+- Ошибки сети / запросов нормализуются через `getErrorMessage` / `getProductsErrorMessage`; в таблице и на проверке `/me` есть кнопка «Повторить».
+- Добавление товара только в клиентском кэше (API симулирует успех).

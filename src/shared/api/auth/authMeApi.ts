@@ -1,28 +1,10 @@
-import { API_BASE_URL, API_ENDPOINTS } from '../config';
-import { getAuthHeaders } from '@shared/lib/security/csrf';
+import { API_ENDPOINTS } from '../config';
+import { api } from '../httpClient';
+import type { AuthMeUser } from '@shared/types';
 
-export interface AuthMeUser {
-	id: number;
-	username: string;
-	email: string;
-	firstName: string;
-	lastName: string;
-}
-
-export async function fetchAuthMe(): Promise<AuthMeUser | null> {
-	const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.auth.me}`, {
-		headers: getAuthHeaders(),
-		credentials: 'omit',
+export async function fetchAuthMe(signal?: AbortSignal): Promise<AuthMeUser> {
+	const { data } = await api.get<AuthMeUser>(API_ENDPOINTS.auth.me, {
+		signal,
 	});
-
-	if (!response.ok) {
-		return null;
-	}
-
-	try {
-		const data = (await response.json()) as AuthMeUser;
-		return data;
-	} catch {
-		return null;
-	}
+	return data;
 }

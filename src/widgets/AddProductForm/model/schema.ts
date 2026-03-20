@@ -1,6 +1,7 @@
 import * as yup from 'yup';
+import type { AddProductFormData } from '@shared/types';
 
-export const addProductSchema = yup
+export const addProductSchema: yup.ObjectSchema<AddProductFormData> = yup
 	.object({
 		title: yup
 			.string()
@@ -21,5 +22,3 @@ export const addProductSchema = yup
 			.min(3, 'Артикул должен содержать минимум 3 символа'),
 	})
 	.required();
-
-export type AddProductFormData = yup.InferType<typeof addProductSchema>;

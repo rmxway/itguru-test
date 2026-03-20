@@ -1,16 +1,13 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchProducts, searchProducts } from '@shared/api/products';
-import type { Product } from '@shared/api/products';
 import { PRODUCTS_PER_PAGE } from '@shared/constants';
-import type { SortField, SortOrder } from '@shared/lib/storage';
-
-export interface UseProductsQueryParams {
-	page: number;
-	searchQuery?: string | null;
-	sortBy?: SortField | null;
-	order?: SortOrder | null;
-}
+import type {
+	Product,
+	SortField,
+	SortOrder,
+	UseProductsQueryParams,
+} from '@shared/types';
 
 function sortProducts(
 	products: Product[],
@@ -34,6 +31,21 @@ function sortProducts(
 	});
 }
 
+function shouldRetryQuery(failureCount: number, error: unknown): boolean {
+	if (failureCount >= 2) return false;
+	if (
+		error != null &&
+		typeof error === 'object' &&
+		'response' in error &&
+		(error as { response?: { status?: number } }).response?.status != null
+	) {
+		const status = (error as { response: { status: number } }).response
+			.status;
+		if (status >= 400 && status < 500 && status !== 408) return false;
+	}
+	return true;
+}
+
 export function useProductsQuery({
 	page,
 	searchQuery = null,
@@ -47,6 +59,7 @@ export function useProductsQuery({
 				? searchProducts(searchQuery, page, signal)
 				: fetchProducts({ page, sortBy, order }, signal),
 		placeholderData: (previousData) => previousData,
+		retry: shouldRetryQuery,
 	});
 
 	const products = useMemo(() => {

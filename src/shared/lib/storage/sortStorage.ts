@@ -1,14 +1,6 @@
-import type { Product } from '@shared/api/products/types';
+import type { SortState } from '@shared/types';
 
 const SORT_STATE_KEY = 'productsSortState';
-
-export type SortField = keyof Product;
-export type SortOrder = 'asc' | 'desc';
-
-export interface SortState {
-	field: SortField;
-	order: SortOrder;
-}
 
 export function saveSortState(state: SortState): void {
 	localStorage.setItem(SORT_STATE_KEY, JSON.stringify(state));

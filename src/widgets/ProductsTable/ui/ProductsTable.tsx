@@ -1,15 +1,20 @@
 import { useState, useCallback, useMemo } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { queryClient } from '@app/providers/queryClient';
 import { useProductsQuery } from '@shared/lib/hooks';
+import { getProductsErrorMessage } from '@shared/lib/errors/getErrorMessage';
 import { RefreshIcon, PlusCircleIcon, SortIcon } from '@shared/assets/icons';
 import { Preloader } from '@shared/ui/Preloader';
+import { Button } from '@shared/ui/Button';
 import { Modal } from '@shared/ui/Modal';
 import toast from 'react-hot-toast';
-import type { SortField, SortOrder } from '@shared/lib/storage';
-import type { Product } from '@shared/api/products';
+import type {
+	AddProductFormData,
+	Product,
+	ProductsResponse,
+	SortField,
+	SortOrder,
+} from '@shared/types';
 import { AddProductForm } from '@widgets/AddProductForm';
-import type { AddProductFormData } from '@widgets/AddProductForm';
 import { Checkbox } from '@shared/ui';
 import { ProductRow } from './ProductRow';
 import { Pagination } from './Pagination';
@@ -29,6 +34,7 @@ import {
 	HeaderActionsSpacer,
 	ProductRows,
 	ErrorMessage,
+	ErrorState,
 	ScrollForTable,
 	SortableHeader,
 } from './styled';
@@ -112,7 +118,7 @@ export function ProductsTable({
 
 	const handleAddProduct = (data: AddProductFormData) => {
 		const newProduct: Product = {
-			id: `temp-${uuidv4()}`,
+			id: `temp-${crypto.randomUUID()}`,
 			title: data.title,
 			brand: data.brand,
 			price: data.price,
@@ -123,15 +129,10 @@ export function ProductsTable({
 		};
 
 		const queryKey = ['products', page, searchQuery, sortBy, sortOrder];
-		const cached = queryClient.getQueryData<{
-			products: Product[];
-			total: number;
-			skip: number;
-			limit: number;
-		}>(queryKey);
+		const cached = queryClient.getQueryData<ProductsResponse>(queryKey);
 
 		if (cached) {
-			queryClient.setQueryData(queryKey, {
+			queryClient.setQueryData<ProductsResponse>(queryKey, {
 				...cached,
 				products: [newProduct, ...cached.products],
 				total: cached.total + 1,
@@ -145,9 +146,14 @@ export function ProductsTable({
 	if (isError) {
 		return (
 			<TableWrapper>
-				<ErrorMessage>
-					{error instanceof Error ? error.message : 'Ошибка загрузки'}
-				</ErrorMessage>
+				<ErrorState>
+					<ErrorMessage>
+						{getProductsErrorMessage(error)}
+					</ErrorMessage>
+					<Button type="button" onClick={() => void refetch()}>
+						Повторить
+					</Button>
+				</ErrorState>
 			</TableWrapper>
 		);
 	}

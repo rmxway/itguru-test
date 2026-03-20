@@ -1,7 +1,1 @@
-export {
-	NetworkError,
-	TimeoutError,
-	ValidationError,
-	UnauthorizedError,
-	ServerError,
-} from './ApiError';
+export { HttpError } from './ApiError';

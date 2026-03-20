@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import styled, { css } from 'styled-components';
 import { media } from '@app/styles/media';
 
@@ -10,21 +9,7 @@ export const modalSizes = {
 
 export type ModalSize = keyof typeof modalSizes;
 
-export const backdropVariants = {
-	initial: { opacity: 0 },
-	animate: { opacity: 1 },
-	exit: { opacity: 0 },
-};
-
-export const contentVariants = {
-	initial: { opacity: 0, scale: 0.95 },
-	animate: { opacity: 1, scale: 1 },
-	exit: { opacity: 0, scale: 0.95 },
-};
-
-export const modalTransition = { duration: 0.2 };
-
-export const Backdrop = styled(motion.div)`
+export const Backdrop = styled.div`
 	${() => css`
 		position: fixed;
 		inset: 0;
@@ -41,6 +26,16 @@ export const Backdrop = styled(motion.div)`
 		padding-right: max(16px, env(safe-area-inset-right));
 		z-index: 1000;
 		-webkit-overflow-scrolling: touch;
+		animation: modalBackdropIn 0.2s ease forwards;
+
+		@keyframes modalBackdropIn {
+			from {
+				opacity: 0;
+			}
+			to {
+				opacity: 1;
+			}
+		}
 
 		${media.greaterThan('sm')`
 			padding: 24px;
@@ -48,7 +43,7 @@ export const Backdrop = styled(motion.div)`
 	`}
 `;
 
-export const Content = styled(motion.div)<{ $size?: ModalSize }>`
+export const Content = styled.div<{ $size?: ModalSize }>`
 	${({ theme, $size }) => css`
 		position: relative;
 		width: 100%;
@@ -60,6 +55,18 @@ export const Content = styled(motion.div)<{ $size?: ModalSize }>`
 		padding-top: 44px;
 		margin: auto;
 		-webkit-overflow-scrolling: touch;
+		animation: modalContentIn 0.2s ease forwards;
+
+		@keyframes modalContentIn {
+			from {
+				opacity: 0;
+				transform: scale(0.95);
+			}
+			to {
+				opacity: 1;
+				transform: scale(1);
+			}
+		}
 
 		${media.greaterThan('sm')`						
 			padding: 24px;

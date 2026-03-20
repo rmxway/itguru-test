@@ -467,13 +467,21 @@ export const LoadingMessage = styled.p`
 	`}
 `;
 
+export const ErrorState = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+	padding: 40px 16px;
+`;
+
 export const ErrorMessage = styled.p`
 	${({ theme }) => css`
 		font-family: ${theme.fonts.primary};
 		font-size: ${theme.fontSizes.sm};
 		color: ${theme.colors.error};
 		text-align: center;
-		padding: 40px;
+		padding: 0;
 		margin: 0;
 	`}
 `;

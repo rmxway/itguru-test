@@ -1,3 +1,5 @@
+import { CanceledError, isAxiosError } from 'axios';
+
 /**
  * Централизованное логирование ошибок.
  * TODO: интеграция с Sentry, LogRocket или аналогом.
@@ -30,6 +32,12 @@ export function logError(error: unknown, context: ErrorLogContext = {}): void {
 	}
 }
 
+function isCanceledRequest(reason: unknown): boolean {
+	if (reason instanceof CanceledError) return true;
+	if (isAxiosError(reason) && reason.code === 'ERR_CANCELED') return true;
+	return false;
+}
+
 export function setupErrorBoundary(): void {
 	window.addEventListener('error', (event) => {
 		if (event.error) {
@@ -41,6 +49,9 @@ export function setupErrorBoundary(): void {
 	});
 
 	window.addEventListener('unhandledrejection', (event) => {
+		if (isCanceledRequest(event.reason)) {
+			return;
+		}
 		logError(event.reason, {
 			url: window.location.href,
 			type: 'unhandledrejection',
