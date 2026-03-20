@@ -31,21 +31,6 @@ function sortProducts(
 	});
 }
 
-function shouldRetryQuery(failureCount: number, error: unknown): boolean {
-	if (failureCount >= 2) return false;
-	if (
-		error != null &&
-		typeof error === 'object' &&
-		'response' in error &&
-		(error as { response?: { status?: number } }).response?.status != null
-	) {
-		const status = (error as { response: { status: number } }).response
-			.status;
-		if (status >= 400 && status < 500 && status !== 408) return false;
-	}
-	return true;
-}
-
 export function useProductsQuery({
 	page,
 	searchQuery = null,
@@ -59,7 +44,6 @@ export function useProductsQuery({
 				? searchProducts(searchQuery, page, signal)
 				: fetchProducts({ page, sortBy, order }, signal),
 		placeholderData: (previousData) => previousData,
-		retry: shouldRetryQuery,
 	});
 
 	const products = useMemo(() => {

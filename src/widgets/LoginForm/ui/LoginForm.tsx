@@ -84,6 +84,8 @@ export function LoginForm() {
 		}
 	};
 
+	const loginErrorMessage = error ? getLoginErrorMessage(error) : '';
+
 	return (
 		<Form onSubmit={handleSubmit(onSubmit)} noValidate>
 			<LogoContainer>
@@ -140,11 +142,9 @@ export function LoginForm() {
 					/>
 				</CheckboxRow>
 
-				{error && (
+				{loginErrorMessage && (
 					<ApiErrorBlock>
-						<ErrorMessage>
-							{getLoginErrorMessage(error)}
-						</ErrorMessage>
+						<ErrorMessage>{loginErrorMessage}</ErrorMessage>
 					</ApiErrorBlock>
 				)}
 

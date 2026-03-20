@@ -1,4 +1,8 @@
-import { isAxiosError } from 'axios';
+import { AxiosError, isAxiosError } from 'axios';
+import {
+	LOGIN_TIMEOUT_MS,
+	LOGIN_TIMEOUT_USER_MESSAGE,
+} from '@shared/constants';
 import { API_ENDPOINTS } from '../config';
 import { publicApi } from '../httpClient';
 import type { LoginRequest, LoginResponse } from '@shared/types';
@@ -22,7 +26,6 @@ export class AuthApiError extends Error {
 export async function login(
 	username: string,
 	password: string,
-	signal?: AbortSignal,
 ): Promise<LoginResponse> {
 	const body: LoginRequest = { username, password, expiresInMins: 30 };
 
@@ -32,7 +35,7 @@ export async function login(
 			body,
 			{
 				headers: { 'Content-Type': 'application/json' },
-				signal,
+				timeout: LOGIN_TIMEOUT_MS,
 			},
 		);
 		return data;
@@ -55,6 +58,18 @@ export async function login(
 			}
 			throw new AuthApiError(message, status);
 		}
+		if (isAxiosError(e) && !e.response && isAxiosRequestTimeout(e)) {
+			throw new AuthApiError(LOGIN_TIMEOUT_USER_MESSAGE);
+		}
 		throw e;
 	}
+}
+
+function isAxiosRequestTimeout(error: AxiosError): boolean {
+	if (error.code === AxiosError.ETIMEDOUT) return true;
+	return (
+		error.code === 'ECONNABORTED' &&
+		typeof error.message === 'string' &&
+		/timeout/i.test(error.message)
+	);
 }
