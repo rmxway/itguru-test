@@ -3,9 +3,8 @@ import {
 	getSortState,
 	saveSortState,
 	removeSortState,
-	type SortField,
-	type SortOrder,
 } from '@shared/lib/storage';
+import type { SortField, SortOrder } from '@shared/types';
 
 function getNextSortState(
 	field: SortField,

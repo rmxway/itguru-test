@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { addProductSchema } from '../model/schema';
-import type { AddProductFormData } from '../model/schema';
+import type { AddProductFormData } from '@shared/types';
 import { Input } from '@shared/ui/Input';
 import { Button } from '@shared/ui/Button';
 import { Form, Title, FieldsBlock, ButtonBlock } from './styled';

@@ -1,17 +1,8 @@
 import { useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { AnimatePresence } from 'framer-motion';
 import { CloseIcon } from '@shared/assets/icons';
 import { lockScroll, unlockScroll } from '@shared/lib/utils';
-import {
-	Backdrop,
-	Content,
-	CloseButton,
-	backdropVariants,
-	contentVariants,
-	modalTransition,
-	type ModalSize,
-} from './styled';
+import { Backdrop, Content, CloseButton, type ModalSize } from './styled';
 
 export type { ModalSize } from './styled';
 
@@ -47,39 +38,21 @@ export function Modal({ isOpen, onClose, children, size }: ModalProps) {
 		if (e.target === e.currentTarget) handleClose();
 	};
 
+	if (!isOpen) return null;
+
 	return createPortal(
-		<AnimatePresence>
-			{isOpen && (
-				<Backdrop
-					variants={backdropVariants}
-					initial="initial"
-					animate="animate"
-					exit="exit"
-					transition={modalTransition}
-					onClick={handleBackdropClick}
-					role="dialog"
-					aria-modal="true"
+		<Backdrop onClick={handleBackdropClick} role="dialog" aria-modal="true">
+			<Content $size={size} onClick={(e) => e.stopPropagation()}>
+				<CloseButton
+					type="button"
+					onClick={handleClose}
+					aria-label="Закрыть"
 				>
-					<Content
-						$size={size}
-						variants={contentVariants}
-						initial="initial"
-						animate="animate"
-						exit="exit"
-						transition={modalTransition}
-					>
-						<CloseButton
-							type="button"
-							onClick={handleClose}
-							aria-label="Закрыть"
-						>
-							<CloseIcon size={24} color="text.primary" />
-						</CloseButton>
-						{children}
-					</Content>
-				</Backdrop>
-			)}
-		</AnimatePresence>,
+					<CloseIcon size={24} color="text.primary" />
+				</CloseButton>
+				{children}
+			</Content>
+		</Backdrop>,
 		document.body,
 	);
 }

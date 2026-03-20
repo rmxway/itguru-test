@@ -1,5 +1,5 @@
 import { useState, memo } from 'react';
-import type { Product } from '@shared/api/products';
+import type { Product } from '@shared/types';
 import { Checkbox } from '@shared/ui';
 import { PlusIcon, DotsIcon } from '@shared/assets/icons';
 import {
@@ -40,15 +40,23 @@ function ProductImageWithPlaceholder({
 	alt: string;
 }) {
 	const [loaded, setLoaded] = useState(false);
+	const [failed, setFailed] = useState(false);
+
 	return (
 		<ProductImageContainer>
-			<ProductImagePlaceholder $visible={!loaded} />
-			<ProductImage
-				src={src}
-				alt={alt}
-				$loaded={loaded}
-				onLoad={() => setLoaded(true)}
-			/>
+			<ProductImagePlaceholder $visible={!loaded || failed} />
+			{!failed && (
+				<ProductImage
+					src={src}
+					alt={alt}
+					$loaded={loaded}
+					onLoad={() => setLoaded(true)}
+					onError={() => {
+						setFailed(true);
+						setLoaded(true);
+					}}
+				/>
+			)}
 		</ProductImageContainer>
 	);
 }

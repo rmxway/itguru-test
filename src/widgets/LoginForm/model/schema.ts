@@ -1,6 +1,7 @@
 import * as yup from 'yup';
+import type { LoginFormData } from '@shared/types';
 
-export const loginSchema = yup
+export const loginSchema: yup.ObjectSchema<LoginFormData> = yup
 	.object({
 		login: yup
 			.string()
@@ -10,8 +11,6 @@ export const loginSchema = yup
 			.string()
 			.required('Пароль обязателен для заполнения')
 			.min(6, 'Пароль должен содержать минимум 6 символов'),
-		rememberMe: yup.boolean().default(false),
+		rememberMe: yup.boolean().default(false).required(),
 	})
 	.required();
-
-export type LoginFormData = yup.InferType<typeof loginSchema>;

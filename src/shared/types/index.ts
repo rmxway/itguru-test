@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 
+export * from './domain';
+
 export type ThemeColorKey =
 	| 'background'
 	| 'white'

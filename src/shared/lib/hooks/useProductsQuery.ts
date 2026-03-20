@@ -1,16 +1,13 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchProducts, searchProducts } from '@shared/api/products';
-import type { Product } from '@shared/api/products';
 import { PRODUCTS_PER_PAGE } from '@shared/constants';
-import type { SortField, SortOrder } from '@shared/lib/storage';
-
-export interface UseProductsQueryParams {
-	page: number;
-	searchQuery?: string | null;
-	sortBy?: SortField | null;
-	order?: SortOrder | null;
-}
+import type {
+	Product,
+	SortField,
+	SortOrder,
+	UseProductsQueryParams,
+} from '@shared/types';
 
 function sortProducts(
 	products: Product[],
